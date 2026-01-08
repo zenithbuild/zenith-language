@@ -1,0 +1,8 @@
+node_modules/
+.vscode/
+.git/
+*.log
+*.ts
+src/
+scripts/
+*.vsix

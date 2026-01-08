@@ -1,0 +1,57 @@
+{
+    "name": "zenith-language",
+    "displayName": "Zenith Language Support",
+    "description": "Syntax highlighting and editor support for Zenith Framework (.zen files)",
+    "version": "0.1.0",
+    "publisher": "ZenithBuild",
+    "engines": {
+        "vscode": "^1.80.0"
+    },
+    "scripts": {
+        "build:marketplace": "node scripts/build.js marketplace",
+        "build:openvsx": "node scripts/build.js openvsx",
+        "build:all": "npm run build:marketplace && npm run build:openvsx"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "icon": "assets/logo.png",
+    "keywords": [
+        "zenith",
+        "zen",
+        "syntax",
+        "highlighting",
+        "framework"
+    ],
+    "contributes": {
+        "languages": [
+            {
+                "id": "zenith",
+                "aliases": [
+                    "Zenith",
+                    "zenith"
+                ],
+                "extensions": [
+                    ".zen"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "zenith",
+                "scopeName": "source.zenith",
+                "path": "./syntaxes/zenith.tmLanguage.json"
+            }
+        ]
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/zenithbuild/zenith"
+    },
+    "homepage": "https://github.com/zenithbuild/zenith#readme",
+    "bugs": {
+        "url": "https://github.com/zenithbuild/zenith/issues"
+    },
+    "license": "MIT"
+}
