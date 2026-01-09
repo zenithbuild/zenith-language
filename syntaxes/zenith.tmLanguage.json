@@ -1,377 +1,203 @@
 {
     "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
     "name": "Zenith",
-    "scopeName": "source.zenith",
+    "scopeName": "text.html.zenith",
     "fileTypes": [
-        "zen"
+        "zen",
+        "zen.html",
+        "zenx"
     ],
     "patterns": [
         {
             "include": "#comment"
         },
         {
-            "include": "#script-block"
+            "include": "#script-tag"
         },
         {
-            "include": "#style-block"
+            "include": "#style-tag"
         },
         {
-            "include": "#html-content"
+            "include": "#component-tag"
+        },
+        {
+            "include": "#slot-tag"
+        },
+        {
+            "include": "#html-tag"
+        },
+        {
+            "include": "#expression"
         }
     ],
     "repository": {
         "comment": {
-            "patterns": [
-                {
-                    "name": "comment.block.html.zen",
-                    "begin": "<!--",
-                    "end": "-->",
-                    "captures": {
-                        "0": {
-                            "name": "punctuation.definition.comment.html.zen"
-                        }
-                    }
-                }
-            ]
-        },
-        "script-block": {
-            "name": "meta.embedded.block.javascript.zen",
-            "begin": "(<)(script)((?:\\s+[^>]*)?>)",
-            "beginCaptures": {
-                "1": {
-                    "name": "punctuation.definition.tag.begin.html.zen"
-                },
-                "2": {
-                    "name": "entity.name.tag.script.html.zen"
-                },
-                "3": {
-                    "name": "punctuation.definition.tag.end.html.zen"
-                }
-            },
-            "end": "(</)(script)(>)",
-            "endCaptures": {
-                "1": {
-                    "name": "punctuation.definition.tag.begin.html.zen"
-                },
-                "2": {
-                    "name": "entity.name.tag.script.html.zen"
-                },
-                "3": {
-                    "name": "punctuation.definition.tag.end.html.zen"
-                }
-            },
-            "patterns": [
-                {
-                    "include": "#zenith-script-content"
-                }
-            ]
-        },
-        "zenith-script-content": {
-            "patterns": [
-                {
-                    "include": "#zenith-state-declaration"
-                },
-                {
-                    "include": "#zenith-lifecycle-hooks"
-                },
-                {
-                    "include": "#javascript-base"
-                }
-            ]
-        },
-        "zenith-state-declaration": {
-            "match": "\\b(state)\\s+([a-zA-Z_$][a-zA-Z0-9_$]*)\\s*(=)",
+            "begin": "<!--",
+            "end": "-->",
+            "name": "comment.block.html.zenith",
             "captures": {
-                "1": {
-                    "name": "storage.type.state.zen"
-                },
-                "2": {
-                    "name": "variable.other.readwrite.zen"
-                },
-                "3": {
-                    "name": "keyword.operator.assignment.zen"
+                "0": {
+                    "name": "punctuation.definition.comment.html.zenith"
                 }
             }
         },
-        "zenith-lifecycle-hooks": {
+        "script-tag": {
+            "begin": "(<)(script)(?=\\s|>)",
+            "beginCaptures": {
+                "1": {
+                    "name": "punctuation.definition.tag.begin.html.zenith"
+                },
+                "2": {
+                    "name": "entity.name.tag.script.html.zenith"
+                }
+            },
+            "end": "(</)(script)\\s*(>)",
+            "endCaptures": {
+                "1": {
+                    "name": "punctuation.definition.tag.begin.html.zenith"
+                },
+                "2": {
+                    "name": "entity.name.tag.script.html.zenith"
+                },
+                "3": {
+                    "name": "punctuation.definition.tag.end.html.zenith"
+                }
+            },
+            "name": "meta.tag.script.zenith",
+            "patterns": [
+                {
+                    "include": "#script-tag-open"
+                },
+                {
+                    "include": "#script-content"
+                }
+            ]
+        },
+        "script-tag-open": {
+            "begin": "(?<=[tT])(?=\\s|>)",
+            "end": "(>)",
+            "endCaptures": {
+                "1": {
+                    "name": "punctuation.definition.tag.end.html.zenith"
+                }
+            },
+            "name": "meta.tag.script.start.html.zenith",
+            "patterns": [
+                {
+                    "include": "#tag-attributes"
+                }
+            ]
+        },
+        "script-content": {
+            "begin": "(?<=>)",
+            "end": "(?=</script)",
+            "name": "source.ts.embedded.zenith",
+            "patterns": [
+                {
+                    "include": "#state-declaration"
+                },
+                {
+                    "include": "#lifecycle-hooks"
+                },
+                {
+                    "include": "source.ts"
+                }
+            ]
+        },
+        "style-tag": {
+            "begin": "(<)(style)(?=\\s|>)",
+            "beginCaptures": {
+                "1": {
+                    "name": "punctuation.definition.tag.begin.html.zenith"
+                },
+                "2": {
+                    "name": "entity.name.tag.style.html.zenith"
+                }
+            },
+            "end": "(</)(style)\\s*(>)",
+            "endCaptures": {
+                "1": {
+                    "name": "punctuation.definition.tag.begin.html.zenith"
+                },
+                "2": {
+                    "name": "entity.name.tag.style.html.zenith"
+                },
+                "3": {
+                    "name": "punctuation.definition.tag.end.html.zenith"
+                }
+            },
+            "name": "meta.tag.style.zenith",
+            "patterns": [
+                {
+                    "include": "#style-tag-open"
+                },
+                {
+                    "include": "#style-content"
+                }
+            ]
+        },
+        "style-tag-open": {
+            "begin": "(?<=[eE])(?=\\s|>)",
+            "end": "(>)",
+            "endCaptures": {
+                "1": {
+                    "name": "punctuation.definition.tag.end.html.zenith"
+                }
+            },
+            "name": "meta.tag.style.start.html.zenith",
+            "patterns": [
+                {
+                    "include": "#tag-attributes"
+                }
+            ]
+        },
+        "style-content": {
+            "begin": "(?<=>)",
+            "end": "(?=</style)",
+            "name": "source.css.embedded.zenith",
+            "patterns": [
+                {
+                    "include": "source.css"
+                }
+            ]
+        },
+        "state-declaration": {
+            "match": "(?<=^|\\s)(state)\\s+([a-zA-Z_$][a-zA-Z0-9_$]*)\\s*(=)",
+            "captures": {
+                "1": {
+                    "name": "storage.type.state.zenith"
+                },
+                "2": {
+                    "name": "variable.other.readwrite.zenith"
+                },
+                "3": {
+                    "name": "keyword.operator.assignment.zenith"
+                }
+            }
+        },
+        "lifecycle-hooks": {
             "match": "\\b(zenOnMount|zenOnDestroy|zenOnUpdate|zenEffect|onMount|onDestroy|onUpdate)\\b",
-            "name": "support.function.lifecycle.zen"
+            "name": "support.function.lifecycle.zenith"
         },
-        "javascript-base": {
+        "component-tag": {
             "patterns": [
                 {
-                    "include": "#js-comments"
-                },
-                {
-                    "include": "#js-strings"
-                },
-                {
-                    "include": "#js-template-literals"
-                },
-                {
-                    "include": "#js-numbers"
-                },
-                {
-                    "include": "#js-keywords"
-                },
-                {
-                    "include": "#js-storage"
-                },
-                {
-                    "include": "#js-operators"
-                },
-                {
-                    "include": "#js-functions"
-                },
-                {
-                    "include": "#js-arrow-functions"
-                },
-                {
-                    "include": "#js-identifiers"
-                }
-            ]
-        },
-        "js-comments": {
-            "patterns": [
-                {
-                    "name": "comment.line.double-slash.js.zen",
-                    "match": "//.*$"
-                },
-                {
-                    "name": "comment.block.js.zen",
-                    "begin": "/\\*",
-                    "end": "\\*/"
-                }
-            ]
-        },
-        "js-strings": {
-            "patterns": [
-                {
-                    "name": "string.quoted.single.js.zen",
-                    "begin": "'",
-                    "end": "'",
-                    "patterns": [
-                        {
-                            "name": "constant.character.escape.js.zen",
-                            "match": "\\\\."
-                        }
-                    ]
-                },
-                {
-                    "name": "string.quoted.double.js.zen",
-                    "begin": "\"",
-                    "end": "\"",
-                    "patterns": [
-                        {
-                            "name": "constant.character.escape.js.zen",
-                            "match": "\\\\."
-                        }
-                    ]
-                }
-            ]
-        },
-        "js-template-literals": {
-            "name": "string.template.js.zen",
-            "begin": "`",
-            "end": "`",
-            "patterns": [
-                {
-                    "name": "meta.template.expression.js.zen",
-                    "begin": "\\$\\{",
-                    "beginCaptures": {
-                        "0": {
-                            "name": "punctuation.definition.template-expression.begin.js.zen"
-                        }
-                    },
-                    "end": "\\}",
-                    "endCaptures": {
-                        "0": {
-                            "name": "punctuation.definition.template-expression.end.js.zen"
-                        }
-                    },
-                    "patterns": [
-                        {
-                            "include": "#javascript-base"
-                        }
-                    ]
-                },
-                {
-                    "name": "constant.character.escape.js.zen",
-                    "match": "\\\\."
-                }
-            ]
-        },
-        "js-numbers": {
-            "match": "\\b(0x[0-9a-fA-F]+|0b[01]+|0o[0-7]+|\\d+(\\.\\d+)?([eE][+-]?\\d+)?)\\b",
-            "name": "constant.numeric.js.zen"
-        },
-        "js-keywords": {
-            "match": "\\b(if|else|for|while|do|switch|case|default|break|continue|return|throw|try|catch|finally|new|delete|typeof|instanceof|in|of|void|this|super|class|extends|import|export|from|as|async|await|yield|debugger|with)\\b",
-            "name": "keyword.control.js.zen"
-        },
-        "js-storage": {
-            "match": "\\b(var|let|const|function|interface|type|enum|namespace|module|declare|abstract|public|private|protected|static|readonly)\\b",
-            "name": "storage.type.js.zen"
-        },
-        "js-operators": {
-            "match": "(===|!==|==|!=|<=|>=|<|>|&&|\\|\\||\\?\\?|\\+\\+|--|\\+=|-=|\\*=|/=|%=|\\*\\*=|=>|\\.\\.\\.|[+\\-*/%&|^~!?:])",
-            "name": "keyword.operator.js.zen"
-        },
-        "js-functions": {
-            "match": "\\b([a-zA-Z_$][a-zA-Z0-9_$]*)\\s*(?=\\()",
-            "captures": {
-                "1": {
-                    "name": "entity.name.function.js.zen"
-                }
-            }
-        },
-        "js-arrow-functions": {
-            "match": "(\\([^)]*\\)|[a-zA-Z_$][a-zA-Z0-9_$]*)\\s*(=>)",
-            "captures": {
-                "1": {
-                    "name": "variable.parameter.js.zen"
-                },
-                "2": {
-                    "name": "storage.type.function.arrow.js.zen"
-                }
-            }
-        },
-        "js-identifiers": {
-            "match": "\\b(true|false|null|undefined|NaN|Infinity)\\b",
-            "name": "constant.language.js.zen"
-        },
-        "style-block": {
-            "name": "meta.embedded.block.css.zen",
-            "begin": "(<)(style)((?:\\s+[^>]*)?>)",
-            "beginCaptures": {
-                "1": {
-                    "name": "punctuation.definition.tag.begin.html.zen"
-                },
-                "2": {
-                    "name": "entity.name.tag.style.html.zen"
-                },
-                "3": {
-                    "name": "punctuation.definition.tag.end.html.zen"
-                }
-            },
-            "end": "(</)(style)(>)",
-            "endCaptures": {
-                "1": {
-                    "name": "punctuation.definition.tag.begin.html.zen"
-                },
-                "2": {
-                    "name": "entity.name.tag.style.html.zen"
-                },
-                "3": {
-                    "name": "punctuation.definition.tag.end.html.zen"
-                }
-            },
-            "patterns": [
-                {
-                    "include": "#css-content"
-                }
-            ]
-        },
-        "css-content": {
-            "patterns": [
-                {
-                    "include": "#css-comments"
-                },
-                {
-                    "include": "#css-selectors"
-                },
-                {
-                    "include": "#css-properties"
-                }
-            ]
-        },
-        "css-comments": {
-            "name": "comment.block.css.zen",
-            "begin": "/\\*",
-            "end": "\\*/"
-        },
-        "css-selectors": {
-            "patterns": [
-                {
-                    "match": "\\.[a-zA-Z_-][a-zA-Z0-9_-]*",
-                    "name": "entity.other.attribute-name.class.css.zen"
-                },
-                {
-                    "match": "#[a-zA-Z_-][a-zA-Z0-9_-]*",
-                    "name": "entity.other.attribute-name.id.css.zen"
-                },
-                {
-                    "match": "\\b([a-zA-Z][a-zA-Z0-9]*)\\b(?=\\s*[{,:])",
-                    "name": "entity.name.tag.css.zen"
-                },
-                {
-                    "match": "::[a-zA-Z-]+|:[a-zA-Z-]+",
-                    "name": "entity.other.attribute-name.pseudo-class.css.zen"
-                }
-            ]
-        },
-        "css-properties": {
-            "patterns": [
-                {
-                    "match": "\\b([a-zA-Z-]+)\\s*:",
-                    "captures": {
-                        "1": {
-                            "name": "support.type.property-name.css.zen"
-                        }
-                    }
-                },
-                {
-                    "match": "#[0-9a-fA-F]{3,8}\\b",
-                    "name": "constant.other.color.rgb-value.css.zen"
-                },
-                {
-                    "match": "\\b(\\d+(\\.\\d+)?)(px|em|rem|%|vh|vw|vmin|vmax|deg|rad|s|ms)?\\b",
-                    "name": "constant.numeric.css.zen"
-                },
-                {
-                    "match": "\\b(auto|inherit|initial|unset|none|block|inline|flex|grid|absolute|relative|fixed|sticky)\\b",
-                    "name": "support.constant.property-value.css.zen"
-                }
-            ]
-        },
-        "html-content": {
-            "patterns": [
-                {
-                    "include": "#zenith-component-tag"
-                },
-                {
-                    "include": "#slot-tag"
-                },
-                {
-                    "include": "#html-tag"
-                },
-                {
-                    "include": "#zenith-expression"
-                },
-                {
-                    "include": "#html-text"
-                }
-            ]
-        },
-        "zenith-component-tag": {
-            "patterns": [
-                {
-                    "name": "meta.tag.component.zen",
-                    "begin": "(<)([A-Z][a-zA-Z0-9]*)",
+                    "begin": "(<)([A-Z][a-zA-Z0-9]*)(?=\\s|/?>)",
                     "beginCaptures": {
                         "1": {
-                            "name": "punctuation.definition.tag.begin.html.zen"
+                            "name": "punctuation.definition.tag.begin.html.zenith"
                         },
                         "2": {
-                            "name": "entity.name.tag.component.zen support.class.component.zen"
+                            "name": "entity.name.tag.component.zenith support.class.component.zenith"
                         }
                     },
                     "end": "(/?>)",
                     "endCaptures": {
                         "1": {
-                            "name": "punctuation.definition.tag.end.html.zen"
+                            "name": "punctuation.definition.tag.end.html.zenith"
                         }
                     },
+                    "name": "meta.tag.component.start.zenith",
                     "patterns": [
                         {
                             "include": "#tag-attributes"
@@ -379,60 +205,56 @@
                     ]
                 },
                 {
-                    "name": "meta.tag.component.close.zen",
-                    "match": "(</)(A-Z][a-zA-Z0-9]*)(>)",
+                    "match": "(</)(\\s*)([A-Z][a-zA-Z0-9]*)(\\s*)(>)",
                     "captures": {
                         "1": {
-                            "name": "punctuation.definition.tag.begin.html.zen"
-                        },
-                        "2": {
-                            "name": "entity.name.tag.component.zen support.class.component.zen"
+                            "name": "punctuation.definition.tag.begin.html.zenith"
                         },
                         "3": {
-                            "name": "punctuation.definition.tag.end.html.zen"
+                            "name": "entity.name.tag.component.zenith support.class.component.zenith"
+                        },
+                        "5": {
+                            "name": "punctuation.definition.tag.end.html.zenith"
                         }
-                    }
+                    },
+                    "name": "meta.tag.component.end.zenith"
                 }
             ]
         },
         "slot-tag": {
-            "patterns": [
-                {
-                    "name": "meta.tag.slot.zen",
-                    "match": "(<)(slot)(\\s*/?>)",
-                    "captures": {
-                        "1": {
-                            "name": "punctuation.definition.tag.begin.html.zen"
-                        },
-                        "2": {
-                            "name": "entity.name.tag.slot.zen keyword.control.slot.zen"
-                        },
-                        "3": {
-                            "name": "punctuation.definition.tag.end.html.zen"
-                        }
-                    }
+            "match": "(<)(slot)(\\s*)(/?>)",
+            "captures": {
+                "1": {
+                    "name": "punctuation.definition.tag.begin.html.zenith"
+                },
+                "2": {
+                    "name": "entity.name.tag.slot.zenith keyword.control.slot.zenith"
+                },
+                "4": {
+                    "name": "punctuation.definition.tag.end.html.zenith"
                 }
-            ]
+            },
+            "name": "meta.tag.slot.zenith"
         },
         "html-tag": {
             "patterns": [
                 {
-                    "name": "meta.tag.html.zen",
-                    "begin": "(<)([a-z][a-zA-Z0-9-]*)",
+                    "begin": "(<)([a-z][a-zA-Z0-9-]*)(?=\\s|/?>)",
                     "beginCaptures": {
                         "1": {
-                            "name": "punctuation.definition.tag.begin.html.zen"
+                            "name": "punctuation.definition.tag.begin.html.zenith"
                         },
                         "2": {
-                            "name": "entity.name.tag.html.zen"
+                            "name": "entity.name.tag.html.zenith"
                         }
                     },
                     "end": "(/?>)",
                     "endCaptures": {
                         "1": {
-                            "name": "punctuation.definition.tag.end.html.zen"
+                            "name": "punctuation.definition.tag.end.html.zenith"
                         }
                     },
+                    "name": "meta.tag.html.start.zenith",
                     "patterns": [
                         {
                             "include": "#tag-attributes"
@@ -440,98 +262,204 @@
                     ]
                 },
                 {
-                    "name": "meta.tag.html.close.zen",
-                    "match": "(</)[a-z][a-zA-Z0-9-]*(>)",
+                    "match": "(</)(\\s*)([a-z][a-zA-Z0-9-]*)(\\s*)(>)",
                     "captures": {
                         "1": {
-                            "name": "punctuation.definition.tag.begin.html.zen"
+                            "name": "punctuation.definition.tag.begin.html.zenith"
                         },
-                        "2": {
-                            "name": "punctuation.definition.tag.end.html.zen"
+                        "3": {
+                            "name": "entity.name.tag.html.zenith"
+                        },
+                        "5": {
+                            "name": "punctuation.definition.tag.end.html.zenith"
                         }
-                    }
+                    },
+                    "name": "meta.tag.html.end.zenith"
                 }
             ]
         },
         "tag-attributes": {
             "patterns": [
                 {
-                    "include": "#attribute-with-expression"
+                    "include": "#attribute-expression"
                 },
                 {
-                    "include": "#attribute-with-string"
+                    "include": "#attribute-event-handler"
+                },
+                {
+                    "include": "#attribute-bind"
+                },
+                {
+                    "include": "#attribute-quoted"
                 },
                 {
                     "include": "#attribute-boolean"
                 }
             ]
         },
-        "attribute-with-expression": {
-            "match": "([a-zA-Z_:][a-zA-Z0-9_:-]*)\\s*(=)\\s*(\\{)([^}]*)(\\})",
-            "captures": {
-                "1": {
-                    "name": "entity.other.attribute-name.html.zen"
-                },
-                "2": {
-                    "name": "punctuation.separator.key-value.html.zen"
-                },
-                "3": {
-                    "name": "punctuation.definition.expression.begin.zen"
-                },
-                "4": {
-                    "name": "meta.embedded.expression.zen",
-                    "patterns": [
-                        {
-                            "include": "#javascript-base"
-                        }
-                    ]
-                },
-                "5": {
-                    "name": "punctuation.definition.expression.end.zen"
-                }
-            }
-        },
-        "attribute-with-string": {
-            "match": "([a-zA-Z_:][a-zA-Z0-9_:-]*)\\s*(=)\\s*(\"[^\"]*\"|'[^']*')",
-            "captures": {
-                "1": {
-                    "name": "entity.other.attribute-name.html.zen"
-                },
-                "2": {
-                    "name": "punctuation.separator.key-value.html.zen"
-                },
-                "3": {
-                    "name": "string.quoted.html.zen"
-                }
-            }
-        },
-        "attribute-boolean": {
-            "match": "\\b([a-zA-Z_:][a-zA-Z0-9_:-]*)\\b(?!=)",
-            "name": "entity.other.attribute-name.html.zen"
-        },
-        "zenith-expression": {
-            "name": "meta.embedded.expression.zen",
-            "begin": "(\\{)(?!\\{)",
+        "attribute-expression": {
+            "begin": "([a-zA-Z_:][a-zA-Z0-9_:-]*)\\s*(=)\\s*(\\{)",
             "beginCaptures": {
                 "1": {
-                    "name": "punctuation.definition.expression.begin.zen"
+                    "name": "entity.other.attribute-name.html.zenith"
+                },
+                "2": {
+                    "name": "punctuation.separator.key-value.html.zenith"
+                },
+                "3": {
+                    "name": "punctuation.section.embedded.begin.zenith"
                 }
             },
             "end": "(\\})",
             "endCaptures": {
                 "1": {
-                    "name": "punctuation.definition.expression.end.zen"
+                    "name": "punctuation.section.embedded.end.zenith"
                 }
             },
+            "name": "meta.attribute.expression.zenith",
+            "contentName": "source.ts.embedded.zenith",
             "patterns": [
                 {
-                    "include": "#javascript-base"
+                    "include": "source.ts"
                 }
             ]
         },
-        "html-text": {
-            "match": "[^<>{]+",
-            "name": "text.html.zen"
+        "attribute-event-handler": {
+            "begin": "(on[A-Z][a-zA-Z]*|onclick|onchange|onsubmit|oninput|onkeydown|onkeyup|onmouseenter|onmouseleave)\\s*(=)\\s*(\\{)",
+            "beginCaptures": {
+                "1": {
+                    "name": "entity.other.attribute-name.event.html.zenith"
+                },
+                "2": {
+                    "name": "punctuation.separator.key-value.html.zenith"
+                },
+                "3": {
+                    "name": "punctuation.section.embedded.begin.zenith"
+                }
+            },
+            "end": "(\\})",
+            "endCaptures": {
+                "1": {
+                    "name": "punctuation.section.embedded.end.zenith"
+                }
+            },
+            "name": "meta.attribute.event-handler.zenith",
+            "contentName": "source.ts.embedded.zenith",
+            "patterns": [
+                {
+                    "include": "source.ts"
+                }
+            ]
+        },
+        "attribute-bind": {
+            "begin": "(:)([a-zA-Z_][a-zA-Z0-9_-]*)\\s*(=)\\s*(\")",
+            "beginCaptures": {
+                "1": {
+                    "name": "punctuation.definition.attribute-shorthand.bind.zenith"
+                },
+                "2": {
+                    "name": "entity.other.attribute-name.html.zenith"
+                },
+                "3": {
+                    "name": "punctuation.separator.key-value.html.zenith"
+                },
+                "4": {
+                    "name": "punctuation.definition.string.begin.html.zenith"
+                }
+            },
+            "end": "(\")",
+            "endCaptures": {
+                "1": {
+                    "name": "punctuation.definition.string.end.html.zenith"
+                }
+            },
+            "name": "meta.attribute.bind.zenith",
+            "contentName": "string.quoted.double.html.zenith"
+        },
+        "attribute-quoted": {
+            "begin": "([a-zA-Z_:][a-zA-Z0-9_:-]*)\\s*(=)\\s*",
+            "beginCaptures": {
+                "1": {
+                    "name": "entity.other.attribute-name.html.zenith"
+                },
+                "2": {
+                    "name": "punctuation.separator.key-value.html.zenith"
+                }
+            },
+            "end": "(?<=[\"'])|(?=\\s|/?>)",
+            "name": "meta.attribute.zenith",
+            "patterns": [
+                {
+                    "begin": "\"",
+                    "beginCaptures": {
+                        "0": {
+                            "name": "punctuation.definition.string.begin.html.zenith"
+                        }
+                    },
+                    "end": "\"",
+                    "endCaptures": {
+                        "0": {
+                            "name": "punctuation.definition.string.end.html.zenith"
+                        }
+                    },
+                    "name": "string.quoted.double.html.zenith",
+                    "patterns": [
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "begin": "'",
+                    "beginCaptures": {
+                        "0": {
+                            "name": "punctuation.definition.string.begin.html.zenith"
+                        }
+                    },
+                    "end": "'",
+                    "endCaptures": {
+                        "0": {
+                            "name": "punctuation.definition.string.end.html.zenith"
+                        }
+                    },
+                    "name": "string.quoted.single.html.zenith",
+                    "patterns": [
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                }
+            ]
+        },
+        "attribute-boolean": {
+            "match": "(?<=\\s)([a-zA-Z_][a-zA-Z0-9_-]*)(?=\\s|/?>)",
+            "captures": {
+                "1": {
+                    "name": "entity.other.attribute-name.html.zenith"
+                }
+            },
+            "name": "meta.attribute.boolean.zenith"
+        },
+        "expression": {
+            "begin": "(\\{)(?!\\{)",
+            "beginCaptures": {
+                "1": {
+                    "name": "punctuation.section.embedded.begin.zenith"
+                }
+            },
+            "end": "(\\})",
+            "endCaptures": {
+                "1": {
+                    "name": "punctuation.section.embedded.end.zenith"
+                }
+            },
+            "name": "meta.embedded.expression.zenith",
+            "contentName": "source.ts.embedded.zenith",
+            "patterns": [
+                {
+                    "include": "source.ts"
+                }
+            ]
         }
     }
 }

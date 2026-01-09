@@ -1,16 +1,26 @@
 {
     "name": "zenith-language",
     "displayName": "Zenith Language Support",
-    "description": "Syntax highlighting and editor support for Zenith Framework (.zen files)",
-    "version": "0.1.0",
+    "description": "Syntax highlighting, IntelliSense, and editor support for Zenith Framework (.zen files)",
+    "version": "0.2.7",
     "publisher": "ZenithBuild",
     "engines": {
         "vscode": "^1.80.0"
     },
+    "main": "./out/extension.js",
     "scripts": {
-        "build:marketplace": "node scripts/build.js marketplace",
-        "build:openvsx": "node scripts/build.js openvsx",
-        "build:all": "npm run build:marketplace && npm run build:openvsx"
+        "build:server": "cd ../packages/zenith-language-server && bun run build",
+        "compile": "esbuild src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node && cp ../packages/zenith-language-server/dist/server.js out/server.js",
+        "watch": "bun run compile -- --watch",
+        "build:marketplace": "bun run build:server && bun run compile && node scripts/build.js marketplace",
+        "build:openvsx": "bun run build:server && bun run compile && node scripts/build.js openvsx",
+        "build:all": "bun run build:server && bun run compile && node scripts/build.js all"
+    },
+    "devDependencies": {
+        "@types/node": "^20.0.0",
+        "@types/vscode": "^1.80.0",
+        "esbuild": "^0.19.0",
+        "typescript": "^5.0.0"
     },
     "categories": [
         "Programming Languages"
@@ -21,6 +31,7 @@
         "zen",
         "syntax",
         "highlighting",
+        "intellisense",
         "framework"
     ],
     "contributes": {
@@ -32,7 +43,9 @@
                     "zenith"
                 ],
                 "extensions": [
-                    ".zen"
+                    ".zen",
+                    ".zen.html",
+                    ".zenx"
                 ],
                 "configuration": "./language-configuration.json"
             }
@@ -40,10 +53,39 @@
         "grammars": [
             {
                 "language": "zenith",
-                "scopeName": "source.zenith",
-                "path": "./syntaxes/zenith.tmLanguage.json"
+                "scopeName": "text.html.zenith",
+                "path": "./syntaxes/zenith.tmLanguage.json",
+                "embeddedLanguages": {
+                    "source.js": "javascript",
+                    "source.ts": "typescript",
+                    "source.css": "css",
+                    "text.html.basic": "html",
+                    "meta.embedded.block.javascript": "javascript",
+                    "meta.embedded.block.typescript": "typescript",
+                    "meta.embedded.block.css": "css"
+                }
             }
-        ]
+        ],
+        "configurationDefaults": {
+            "[zenith]": {
+                "editor.formatOnSave": true,
+                "editor.wordBasedSuggestions": "off",
+                "editor.suggest.insertMode": "replace",
+                "editor.semanticHighlighting.enabled": true,
+                "editor.quickSuggestions": {
+                    "other": true,
+                    "comments": false,
+                    "strings": true
+                },
+                "editor.autoClosingBrackets": "always"
+            },
+            "emmet.includeLanguages": {
+                "zenith": "html"
+            },
+            "emmet.syntaxProfiles": {
+                "zenith": "html"
+            }
+        }
     },
     "repository": {
         "type": "git",
@@ -53,5 +95,8 @@
     "bugs": {
         "url": "https://github.com/zenithbuild/zenith/issues"
     },
-    "license": "MIT"
+    "license": "MIT",
+    "dependencies": {
+        "vscode-languageclient": "^9.0.1"
+    }
 }

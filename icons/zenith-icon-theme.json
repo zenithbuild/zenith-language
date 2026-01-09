@@ -1,0 +1,14 @@
+{
+    "hidesExplorerArrows": false,
+    "fileExtensions": {
+        "zen": "_zen_file",
+        "zen.html": "_zen_file",
+        "zenx": "_zen_file"
+    },
+    "fileNames": {},
+    "iconDefinitions": {
+        "_zen_file": {
+            "iconPath": "./zen.icns"
+        }
+    }
+}

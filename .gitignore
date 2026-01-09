@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+
+# Build output
+out/
+dist/
+*.vsix
+
+# Scripts and testing
+.vscode-test/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+bun-debug.log*
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Bun
+bun.lockb
+# bun.lock could be tracked, but if it was untracked in git status, 
+# keep it in mind. Usually bun.lock (text) or bun.lockb (binary) 
+# are equivalent to lockfiles.
+# We'll leave it out of ignore for now unless requested.
+
+# VS Code specific
+.history/
+.ionide/
+
+# User-specific VSIX files
+zenith-language-openvsx.vsix
+zenith-language-vscode-marketplace.vsix
