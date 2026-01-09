@@ -1,85 +1,45 @@
-# Zenith VS Code Extension
+# zenith-language ⚡
 
-Syntax highlighting and editor support for `.zen` files.
+VS Code extension providing world-class development support for the Zenith framework.
+
+## Overview
+
+`zenith-language` brings the Zenith development experience into VS Code. It provides syntax highlighting, intelligent code completion, and deep integration with the Zenith LSP to make building reactive apps a breeze.
 
 ## Features
 
-- **Syntax Highlighting** for `.zen` files
-- **HTML-first** structure recognition
-- **Embedded JavaScript** in `<script>` blocks with Zenith-specific keywords (`state`, `zenOnMount`, etc.)
-- **Embedded CSS** in `<style>` blocks
-- **Expression highlighting** for `{expression}` syntax in HTML
-- **Component recognition** for capitalized tags (e.g., `<DefaultLayout>`)
-- **Slot support** for `<slot />` elements
-- **Bracket matching** and auto-closing
+- **Syntax Highlighting**: Expertly crafted TextMate grammar for `.zen` files, including embedded JavaScript, TypeScript, and CSS.
+- **IntelliSense**: Smart completions for Zenith components, hooks, and reactive state.
+- **Emmet Support**: Accelerated HTML development inside `.zen` templates.
+- **Project Scaffolding**: Integrated support for starting new projects.
+- **LSP Integration**: Leverages `@zenith/language-server` for powerful diagnostics and refactoring.
 
-## Zenith-Specific Scopes
+## Supported Extensions
 
-| Syntax | Scope |
-|--------|-------|
-| `state count = 0` | `storage.type.state.zen` |
-| `zenOnMount(() => {})` | `support.function.lifecycle.zen` |
-| `<DefaultLayout>` | `entity.name.tag.component.zen` |
-| `<slot />` | `keyword.control.slot.zen` |
-| `{expression}` | `meta.embedded.expression.zen` |
+- `.zen`
+- `.zenx`
+- `.zen.html`
 
-## Installation (Development)
+## Recommended Settings
 
-1. Copy this folder to your VS Code extensions directory:
-   - **macOS**: `~/.vscode/extensions/zenith-lang`
-   - **Windows**: `%USERPROFILE%\.vscode\extensions\zenith-lang`
-   - **Linux**: `~/.vscode/extensions/zenith-lang`
+The extension automatically configures your editor for the best experience. For more details on customization, see the VS Code settings for Zenith.
 
-2. Restart VS Code
+## Development
 
-3. Open any `.zen` file
+```bash
+# Clone the repository
+git clone https://github.com/zenithbuild/zenith.git
 
-## File Structure
+# Navigate to language package
+cd zenith-language
 
-```
-zenith-vscode/
-├── package.json                    # Extension manifest
-├── language-configuration.json     # Brackets, comments, folding
-├── syntaxes/
-│   └── zenith.tmLanguage.json     # TextMate grammar
-└── README.md
+# Install dependencies
+bun install
+
+# Build the server and compile the extension
+bun run build:all
 ```
 
-## Grammar Design Notes
+## License
 
-### HTML Base
-The grammar treats `.zen` files as HTML-first documents. Standard HTML tags are recognized and highlighted with `entity.name.tag.html.zen` scope.
-
-### Embedded Languages
-- `<script>` blocks use JavaScript/TypeScript highlighting with additional Zenith keyword recognition
-- `<style>` blocks use standard CSS highlighting
-
-### Expression Syntax
-Single brace expressions `{...}` are recognized in HTML content and attributes. The content is highlighted as JavaScript. **Double braces `{{}}` are NOT supported** per Zenith syntax rules.
-
-### Component Tags
-Capitalized tags like `<DefaultLayout>` are recognized as Zenith components and receive `entity.name.tag.component.zen` scope for distinct styling.
-
-### Zenith Keywords
-The following Zenith-specific keywords are recognized in script blocks:
-- `state` - reactive state declaration
-- `zenOnMount` - lifecycle hook
-- `zenOnDestroy` - lifecycle hook  
-- `zenOnUpdate` - lifecycle hook
-- `zenEffect` - effect declaration
-
-## REDCMD Compatibility
-
-This grammar is authored following TextMate/REDCMD patterns:
-- Uses standard `begin`/`end` capture groups
-- Defines reusable patterns in `repository`
-- Uses hierarchical scope names
-- Compatible with VS Code's grammar engine
-
-## Future Work
-
-- [ ] IntelliSense / LSP support
-- [ ] Snippets for common patterns
-- [ ] Go-to-definition for components
-- [ ] Hover documentation
-# zenith-language
+MIT
