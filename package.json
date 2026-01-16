@@ -9,8 +9,8 @@
     },
     "main": "./out/extension.js",
     "scripts": {
-        "build:server": "cd ../packages/zenith-language-server && bun run build",
-        "compile": "esbuild src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node && cp ../packages/zenith-language-server/dist/server.js out/server.js",
+        "build:server": "cd ../zenith-language-server && bun run build",
+        "compile": "npx esbuild src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node && cp ../zenith-language-server/dist/server.js out/server.js",
         "watch": "bun run compile -- --watch",
         "build:marketplace": "bun run build:server && bun run compile && node scripts/build.js marketplace",
         "build:openvsx": "bun run build:server && bun run compile && node scripts/build.js openvsx",
