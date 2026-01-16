@@ -14,7 +14,12 @@
         "watch": "bun run compile -- --watch",
         "build:marketplace": "bun run build:server && bun run compile && node scripts/build.js marketplace",
         "build:openvsx": "bun run build:server && bun run compile && node scripts/build.js openvsx",
-        "build:all": "bun run build:server && bun run compile && node scripts/build.js all"
+        "build:all": "bun run build:server && bun run compile && node scripts/build.js all",
+        "release": "bun run scripts/release.ts",
+        "release:dry": "bun run scripts/release.ts --dry-run",
+        "release:patch": "bun run scripts/release.ts --bump=patch",
+        "release:minor": "bun run scripts/release.ts --bump=minor",
+        "release:major": "bun run scripts/release.ts --bump=major"
     },
     "devDependencies": {
         "@types/node": "^20.0.0",
