@@ -2,7 +2,7 @@
     "name": "zenith-language",
     "displayName": "Zenith Language Support",
     "description": "Syntax highlighting, IntelliSense, and editor support for Zenith Framework (.zen files)",
-    "version": "0.2.9",
+    "version": "0.3.0",
     "publisher": "ZenithBuild",
     "engines": {
         "vscode": "^1.80.0"
