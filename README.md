@@ -12,7 +12,7 @@ VS Code extension providing world-class development support for the Zenith frame
 - **IntelliSense**: Smart completions for Zenith components, hooks, and reactive state.
 - **Emmet Support**: Accelerated HTML development inside `.zen` templates.
 - **Project Scaffolding**: Integrated support for starting new projects.
-- **LSP Integration**: Leverages `@zenith/language-server` for powerful diagnostics and refactoring.
+- **LSP Integration**: Leverages `@zenithbuild/language-server` for powerful diagnostics and refactoring.
 
 ## Supported Extensions
 

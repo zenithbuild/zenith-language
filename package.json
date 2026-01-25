@@ -2,7 +2,7 @@
   "name": "zenith-language",
   "displayName": "Zenith Language Support",
   "description": "Syntax highlighting, IntelliSense, and editor support for Zenith Framework (.zen files)",
-  "version": "0.4.0",
+  "version": "0.4.4",
   "publisher": "ZenithBuild",
   "engines": {
     "vscode": "^1.80.0"
@@ -99,6 +99,9 @@
   "homepage": "https://github.com/zenithbuild/zenith#readme",
   "bugs": {
     "url": "https://github.com/zenithbuild/zenith/issues"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "license": "MIT",
   "dependencies": {
