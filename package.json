@@ -1,5 +1,5 @@
 {
-  "name": "zenith-language",
+  "name": "@zenithbuild/language",
   "displayName": "Zenith Language Support",
   "description": "Syntax highlighting, IntelliSense, and editor support for Zenith Framework (.zen files)",
   "version": "1.4.0",
