@@ -19,7 +19,8 @@
     "release:dry": "bun run scripts/release.ts --dry-run",
     "release:patch": "bun run scripts/release.ts --bump=patch",
     "release:minor": "bun run scripts/release.ts --bump=minor",
-    "release:major": "bun run scripts/release.ts --bump=major"
+    "release:major": "bun run scripts/release.ts --bump=major",
+    "build": "tsc"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
