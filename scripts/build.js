@@ -28,6 +28,29 @@ const TARGETS = {
 
 const packageJsonPath = path.join(__dirname, '..', 'package.json');
 const rootDir = path.join(__dirname, '..');
+const EXTENSION_ID = 'zenith-language';
+const REQUIRED_PACKAGING_DEPS = ['vscode-languageclient'];
+
+function readPackageJsonRaw() {
+    return fs.readFileSync(packageJsonPath, 'utf8');
+}
+
+function isDependencyInstalled(depName) {
+    return fs.existsSync(path.join(rootDir, 'node_modules', depName, 'package.json'));
+}
+
+function ensurePackagingDependencies() {
+    const missing = REQUIRED_PACKAGING_DEPS.filter((dep) => !isDependencyInstalled(dep));
+    if (missing.length === 0) {
+        return;
+    }
+
+    console.log(`📥 Installing missing packaging dependencies: ${missing.join(', ')}`);
+    execSync('bun install', {
+        cwd: rootDir,
+        stdio: 'inherit'
+    });
+}
 
 function build(target) {
     const config = TARGETS[target];
@@ -41,46 +64,45 @@ function build(target) {
     console.log(`   Publisher: ${config.publisher}\n`);
 
     // Read package.json
-    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-    const originalPublisher = packageJson.publisher;
-    const version = packageJson.version;
-    const name = packageJson.name;
+    const originalPackageJsonRaw = readPackageJsonRaw();
+    const packageJson = JSON.parse(originalPackageJsonRaw);
+    const originalName = packageJson.name;
 
     // Output filename
-    const outputName = `${name}-${config.outputSuffix}.vsix`;
-    const defaultOutput = `${name}-${version}.vsix`;
+    const outputName = `${EXTENSION_ID}-${config.outputSuffix}.vsix`;
+    const outputPath = path.join(rootDir, outputName);
 
     // Update publisher
     packageJson.publisher = config.publisher;
+    packageJson.name = EXTENSION_ID;
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 4) + '\n');
 
     try {
         // Run vsce package
         console.log('📦 Packaging extension...\n');
-        execSync('vsce package', {
+        ensurePackagingDependencies();
+        if (fs.existsSync(outputPath)) {
+            fs.unlinkSync(outputPath);
+        }
+
+        execSync(`npx vsce package --out "${outputName}"`, {
             cwd: rootDir,
             stdio: 'inherit'
         });
 
-        // Rename to target-specific name
-        const defaultPath = path.join(rootDir, defaultOutput);
-        const outputPath = path.join(rootDir, outputName);
-
-        if (fs.existsSync(defaultPath)) {
-            // Remove existing output if present
-            if (fs.existsSync(outputPath)) {
-                fs.unlinkSync(outputPath);
-            }
-            fs.renameSync(defaultPath, outputPath);
+        if (!fs.existsSync(outputPath)) {
+            throw new Error(`Expected build artifact was not created: ${outputName}`);
         }
 
         console.log(`\n✅ Built: ${outputName}`);
         console.log(`   Publisher: ${config.publisher}`);
-        console.log(`   Version: ${version}`);
+        console.log(`   Version: ${packageJson.version}`);
+        console.log(`   Extension ID: ${EXTENSION_ID}`);
+        console.log(`   Original package name: ${originalName}`);
 
         if (target === 'marketplace') {
             console.log('\n📤 To publish to VSCode Marketplace:');
-            console.log('   vsce publish');
+            console.log(`   npx vsce publish --packagePath "${outputName}"`);
         } else {
             console.log('\n📤 To publish to Open VSX:');
             console.log(`   npx ovsx publish ${outputName} -p <TOKEN>`);
@@ -89,9 +111,8 @@ function build(target) {
         return outputName;
 
     } finally {
-        // Restore original publisher
-        packageJson.publisher = originalPublisher;
-        fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 4) + '\n');
+        // Restore package.json exactly as it was before this build
+        fs.writeFileSync(packageJsonPath, originalPackageJsonRaw);
     }
 }
 

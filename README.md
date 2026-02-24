@@ -13,6 +13,18 @@ VS Code extension providing world-class development support for the Zenith frame
 - **Emmet Support**: Accelerated HTML development inside `.zen` templates.
 - **Project Scaffolding**: Integrated support for starting new projects.
 - **LSP Integration**: Leverages `@zenithbuild/language-server` for powerful diagnostics and refactoring.
+- **Workspace Commands**:
+  - `Zenith: Run Contract Pack`
+  - `Zenith: Run Legacy Tests`
+  - `Zenith: Build`
+  - `Zenith: Restart Server`
+
+## Settings
+
+- `zenith.componentScripts`: `forbid` (default) or `allow`.
+- `zenith.languageServer.path`: optional absolute or workspace-relative path override for the language server entry file.
+
+The extension supports multi-root workspaces. Command execution prompts for the target workspace folder when multiple folders are open.
 
 ## Supported Extensions
 

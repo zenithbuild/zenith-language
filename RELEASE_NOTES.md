@@ -1,23 +1,29 @@
-# 🚀 zenith-language v0.4.7
+# 🚀 zenith-language v0.4.8
 
-## [0.4.7] - 2026-01-26
+## [0.4.8] - 2026-02-15
 
-### 📝 Other Changes
+### ✨ Tooling Updates
 
-- **** ()
+- Added multi-root-aware commands:
+  - Run Contract Pack
+  - Run Legacy Tests
+  - Build
+  - Restart Server
+- Added `zenith.languageServer.path` setting for custom server path override.
+- Added `zenith.componentScripts` setting surfaced in VS Code configuration and synchronized to the language server.
 
 
 
 ## 📦 Installation
 
 ```bash
-bun add zenith-language@0.4.7
+bun add zenith-language@0.4.8
 ```
 
 *or with npm:*
 
 ```bash
-npm install zenith-language@0.4.7
+npm install zenith-language@0.4.8
 ```
 
 ---
