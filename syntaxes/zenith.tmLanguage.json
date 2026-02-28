@@ -103,6 +103,12 @@
                     "include": "#lifecycle-hooks"
                 },
                 {
+                    "include": "#platform-primitives"
+                },
+                {
+                    "include": "#support-functions"
+                },
+                {
                     "include": "#zenith-imports"
                 },
                 {
@@ -182,8 +188,16 @@
             }
         },
         "lifecycle-hooks": {
-            "match": "\\b(zenOnMount|zenOnDestroy|zenOnUpdate|zenEffect|onMount|onDestroy|onUpdate|useRoute|useRouter)\\b",
+            "match": "\\b(zenMount|zenOnMount|zenOnDestroy|zenOnUpdate|zenEffect|onMount|onDestroy|onUpdate|useRoute|useRouter)\\b",
             "name": "support.function.lifecycle.zenith"
+        },
+        "platform-primitives": {
+            "match": "\\b(zenWindow|zenDocument|zenOn|zenResize|collectRefs)\\b",
+            "name": "support.function.platform.zenith"
+        },
+        "support-functions": {
+            "match": "\\b(signal|ref)\\s*(<|\\()",
+            "name": "support.function.zenith"
         },
         "zenith-imports": {
             "match": "(['\"])(zenith(?:/[a-zA-Z-]+)?|zenith:[a-zA-Z-]+)\\1",
@@ -343,6 +357,9 @@
                     "include": "#attribute-directive"
                 },
                 {
+                    "include": "#attribute-on-event"
+                },
+                {
                     "include": "#attribute-at-event"
                 },
                 {
@@ -419,6 +436,33 @@
                 }
             ]
         },
+        "attribute-on-event": {
+            "begin": "(on:[a-zA-Z][a-zA-Z0-9_-]*)\\s*(=)\\s*(\\{)",
+            "beginCaptures": {
+                "1": {
+                    "name": "entity.other.attribute-name.event.canonical.zenith"
+                },
+                "2": {
+                    "name": "punctuation.separator.key-value.html.zenith"
+                },
+                "3": {
+                    "name": "punctuation.section.embedded.begin.zenith"
+                }
+            },
+            "end": "(\\})",
+            "endCaptures": {
+                "1": {
+                    "name": "punctuation.section.embedded.end.zenith"
+                }
+            },
+            "name": "meta.attribute.event.canonical.zenith",
+            "contentName": "source.ts.embedded.zenith",
+            "patterns": [
+                {
+                    "include": "source.ts"
+                }
+            ]
+        },
         "attribute-at-event": {
             "begin": "(@)([a-zA-Z][a-zA-Z0-9]*)\\s*(=)\\s*(\\{)",
             "beginCaptures": {
@@ -441,7 +485,7 @@
                     "name": "punctuation.section.embedded.end.zenith"
                 }
             },
-            "name": "meta.attribute.event.zenith",
+            "name": "meta.attribute.event.legacy.zenith",
             "contentName": "source.ts.embedded.zenith",
             "patterns": [
                 {
@@ -575,7 +619,7 @@
                     "name": "punctuation.section.embedded.end.zenith"
                 }
             },
-            "name": "meta.attribute.event-handler.zenith",
+            "name": "meta.attribute.event-handler.legacy.zenith",
             "contentName": "source.ts.embedded.zenith",
             "patterns": [
                 {

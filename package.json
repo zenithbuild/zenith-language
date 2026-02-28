@@ -2,7 +2,7 @@
     "name": "@zenithbuild/language",
     "displayName": "Zenith Language Support",
     "description": "Syntax highlighting, IntelliSense, and editor support for Zenith Framework (.zen files)",
-    "version": "0.5.0-beta.2.20",
+    "version": "0.6.0",
     "publisher": "ZenithBuild",
     "engines": {
         "vscode": "^1.80.0"
@@ -16,6 +16,7 @@
         "onCommand:zenith.restartServer"
     ],
     "scripts": {
+        "test": "node --test test/grammar-snippets.spec.js",
         "build:server": "cd ../zenith-language-server && bun run build",
         "compile": "bun x esbuild src/extension.ts --bundle --outfile=out/extension.js --external:vscode --external:vscode-languageclient/node --format=cjs --platform=node && cp ../zenith-language-server/dist/server.js out/server.js",
         "watch": "bun run compile -- --watch",
@@ -64,6 +65,12 @@
                 "configuration": "./language-configuration.json"
             }
         ],
+        "snippets": [
+            {
+                "language": "zenith",
+                "path": "./snippets/zenith.code-snippets"
+            }
+        ],
         "grammars": [
             {
                 "language": "zenith",
@@ -72,6 +79,7 @@
                 "embeddedLanguages": {
                     "source.js": "javascript",
                     "source.ts": "typescript",
+                    "source.ts.embedded.zenith": "typescript",
                     "source.css": "css",
                     "text.html.basic": "html",
                     "meta.embedded.block.javascript": "javascript",
@@ -134,6 +142,11 @@
                     ],
                     "default": "forbid",
                     "description": "Component script contract mode. 'forbid' enforces structural-only components; 'allow' disables this diagnostic."
+                },
+                "zenith.strictDomLints": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "When true, ZEN-DOM-* lints (querySelector, addEventListener, etc.) are reported as errors instead of warnings."
                 },
                 "zenith.languageServer.path": {
                     "type": "string",
