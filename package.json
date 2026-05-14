@@ -1,7 +1,7 @@
 {
   "name": "@zenithbuild/language",
   "displayName": "Zenith Language Support",
-  "description": "Syntax highlighting, IntelliSense, and editor support for Zenith Framework (.zen files)",
+  "description": "Syntax highlighting, snippets, and VS Code language-server integration for Zenith (.zen files)",
   "version": "0.6.1",
   "publisher": "ZenithBuild",
   "engines": {
@@ -158,11 +158,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/zenithbuild/zenith"
+    "url": "https://github.com/zenithbuild/zenith-language.git"
   },
-  "homepage": "https://github.com/zenithbuild/zenith#readme",
+  "homepage": "https://github.com/zenithbuild/zenith-language#readme",
   "bugs": {
-    "url": "https://github.com/zenithbuild/zenith/issues"
+    "url": "https://github.com/zenithbuild/zenith-language/issues"
   },
   "publishConfig": {
     "access": "public"

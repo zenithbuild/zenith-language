@@ -71,3 +71,18 @@ test('package.json contributes single grammar for zenith', () => {
   assert.equal(zenithGrammars.length, 1, 'Exactly one grammar for zenith');
   assert.equal(zenithGrammars[0]?.scopeName, 'text.html.zenith');
 });
+
+test('package metadata and README describe VS Code role without standalone server drift', () => {
+  const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
+  const readme = fs.readFileSync(path.join(ROOT, 'README.md'), 'utf8');
+
+  assert.match(pkg.description, /VS Code language-server integration/);
+  assert.equal(pkg.repository.url, 'https://github.com/zenithbuild/zenith-language.git');
+  assert.equal(pkg.homepage, 'https://github.com/zenithbuild/zenith-language#readme');
+  assert.equal(pkg.bugs.url, 'https://github.com/zenithbuild/zenith-language/issues');
+
+  assert.match(readme, /This package is the VS Code extension/);
+  assert.match(readme, /@zenithbuild\/language-server/);
+  assert.match(readme, /zenith-language-server/);
+  assert.match(readme, /no full TypeScript semantic completion or typechecking/);
+});
