@@ -150,11 +150,14 @@ end
 local attached_clients = #vim.lsp.get_clients({ bufnr = bufnr, name = config.name })
 
 local uri = vim.uri_from_bufnr(bufnr)
-vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, {
+local valid_lines = {
   '<script setup="ts">',
   'const count = signal(0);',
   '</script>',
-  '<button on:',
+  '<button on:click={increment}>{count}</button>',
+}
+vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, {
+  unpack(valid_lines),
 })
 if not vim.wait(10000, function()
   return #vim.diagnostic.get(bufnr) == 0
@@ -183,11 +186,16 @@ end, 50) then
 end
 local diagnostic = vim.diagnostic.get(bufnr)[1]
 
-vim.cmd("edit!")
+vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, {
+  unpack(valid_lines),
+})
 if not vim.wait(10000, function()
   return #vim.diagnostic.get(bufnr) == 0
 end, 50) then
   fail("Expected diagnostics to clear after valid reload")
+end
+if #vim.lsp.get_clients({ bufnr = bufnr, name = config.name }) == 0 then
+  fail("Expected Zenith language server to remain attached after valid restore")
 end
 
 write({
@@ -207,6 +215,6 @@ write({
   hoverRequestReturned = hover_ok,
   syntax = syntax
 })
-vim.cmd("qa")
+vim.cmd("qa!")
 `;
 }
