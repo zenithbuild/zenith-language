@@ -55,7 +55,8 @@ async function startLanguageClient(context: vscode.ExtensionContext): Promise<vo
         clientOptions
     );
 
-    context.subscriptions.push(client.start());
+    await client.start();
+    context.subscriptions.push(client);
 }
 
 async function restartLanguageClient(context: vscode.ExtensionContext): Promise<void> {
