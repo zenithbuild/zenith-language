@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.11] - 2026-05-14
+
+### Changed
+
+- Clarified the package role as the VS Code language extension.
+- Pointed Neovim and plain LSP users to `@zenithbuild/language-server`.
+- Updated package metadata for the standalone repository.
+- Fixed VS Code client startup subscription handling.
+
+### Added
+
+- README and package metadata truth coverage.
+
 ## [0.6.0] - 2026-02-28
 
 ### Added
@@ -87,4 +100,3 @@ cff8202737008d97c6527703f51783583eae7e6f ()
 - 
 52507461378cb8f2d87245b84924790a191879ad ()
 -  ()
-
