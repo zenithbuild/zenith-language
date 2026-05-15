@@ -16,6 +16,13 @@ npm i -g @zenithbuild/language-server
 zenith-language-server
 ```
 
+For Neovim syntax/filetype support, install this repository as a runtime plugin
+or add the installed package directory to `runtimepath` before opening `.zen`
+files, then source `plugin/zenith.lua` if your plugin manager does not source it
+automatically. See [manual Neovim verification](docs/manual-neovim-verification.md).
+Remove older local ftdetect rules that force `.zen` files to `html` or `zen`;
+the Zenith LSP config attaches to `filetype=zenith`.
+
 ## Features
 
 - **Syntax Highlighting**: Expertly crafted TextMate grammar for `.zen` files, including embedded JavaScript, TypeScript, and CSS.
@@ -48,12 +55,14 @@ The extension automatically configures your editor for the best experience. For 
 ## Editor Scope
 
 This package is the VS Code extension. It does not provide a public
-`zenith-language-server` command for Neovim or other editors. Use
-`@zenithbuild/language-server` for the standalone LSP server.
+`zenith-language-server` command for Neovim or other editors. It does provide a
+Neovim filetype/syntax fallback when this repository or package is on
+`runtimepath`. Use `@zenithbuild/language-server` for the standalone LSP server.
 
 Current language-server limitations still apply in VS Code:
 - no full TypeScript semantic completion or typechecking
 - no project-wide symbol index
+- no semantic tokens yet; Neovim highlighting is a syntax fallback
 
 ## Development
 

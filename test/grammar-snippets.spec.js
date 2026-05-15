@@ -6,6 +6,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
+const childProcess = require('node:child_process');
 
 const ROOT = path.resolve(__dirname, '..');
 
@@ -86,3 +87,66 @@ test('package metadata and README describe VS Code role without standalone serve
   assert.match(readme, /zenith-language-server/);
   assert.match(readme, /no full TypeScript semantic completion or typechecking/);
 });
+
+test('Neovim runtime files provide Zenith filetype and syntax fallback', () => {
+  const ftdetect = fs.readFileSync(path.join(ROOT, 'ftdetect', 'zenith.vim'), 'utf8');
+  const filetypeLua = fs.readFileSync(path.join(ROOT, 'filetype.lua'), 'utf8');
+  const plugin = fs.readFileSync(path.join(ROOT, 'plugin', 'zenith.lua'), 'utf8');
+  const afterFtdetect = fs.readFileSync(path.join(ROOT, 'after', 'ftdetect', 'zenith.vim'), 'utf8');
+  const syntax = fs.readFileSync(path.join(ROOT, 'syntax', 'zenith.vim'), 'utf8');
+  const readme = fs.readFileSync(path.join(ROOT, 'README.md'), 'utf8');
+
+  assert.match(ftdetect, /\*\.zen/);
+  assert.match(ftdetect, /\*\.zen\.html/);
+  assert.match(ftdetect, /\*\.zenx/);
+  assert.match(ftdetect, /filetype=zenith/);
+  assert.match(filetypeLua, /vim\.filetype\.add/);
+  assert.match(filetypeLua, /zenith/);
+  assert.match(plugin, /vim\.filetype\.add/);
+  assert.match(plugin, /filetype = "zenith"/);
+  assert.match(plugin, /BufEnter/);
+  assert.match(plugin, /BufWinEnter/);
+  assert.match(plugin, /current_syntax/);
+  assert.match(plugin, /syntax = "zenith"/);
+  assert.match(afterFtdetect, /filetype=zenith/);
+  assert.match(syntax, /zenithEventBinding/);
+  assert.match(syntax, /zenithScript/);
+  assert.match(syntax, /syntax\/typescript\.vim/);
+  assert.match(readme, /runtimepath/);
+  assert.match(readme, /no semantic tokens yet/);
+});
+
+test('Neovim runtime smoke detects filetype and syntax when nvim is available', { skip: !hasNeovim() }, () => {
+  const fixture = path.join(ROOT, 'test', 'fixtures', 'grammar-test.zen');
+  const cleanHome = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'zenith-nvim-home-'));
+  const script = [
+    'filetype on',
+    'syntax enable',
+    `edit ${fixture.replace(/\\/g, '\\\\').replace(/ /g, '\\ ')}`,
+    'lua print("ft=" .. vim.bo.filetype)',
+    'lua print("syntax=" .. vim.fn.synIDattr(vim.fn.synID(1, 2, 1), "name"))',
+    'qa!'
+  ];
+  const result = childProcess.spawnSync('nvim', [
+    '--headless',
+    '-u',
+    'NONE',
+    '-n',
+    '--cmd',
+    `set runtimepath^=${ROOT.replace(/\\/g, '\\\\').replace(/ /g, '\\ ')}`,
+    ...script.map((cmd) => `+${cmd}`)
+  ], {
+    encoding: 'utf8',
+    env: { ...process.env, XDG_CONFIG_HOME: cleanHome, XDG_DATA_HOME: cleanHome }
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  const output = `${result.stdout}\n${result.stderr}`;
+  assert.match(output, /ft=zenith/);
+  assert.match(output, /syntax=.+/);
+});
+
+function hasNeovim() {
+  const result = childProcess.spawnSync('nvim', ['--version'], { encoding: 'utf8' });
+  return result.status === 0;
+}

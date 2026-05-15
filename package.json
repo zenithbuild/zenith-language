@@ -17,6 +17,7 @@
   ],
   "scripts": {
     "test": "node --test test/grammar-snippets.spec.js",
+    "smoke:neovim": "node scripts/neovim-installed-smoke.mjs",
     "build:server": "cd ../zenith-language-server && bun run build",
     "compile": "bun x esbuild src/extension.ts --bundle --outfile=out/extension.js --external:vscode --external:vscode-languageclient/node --format=cjs --platform=node && cp ../zenith-language-server/dist/server.js out/server.js",
     "watch": "bun run compile -- --watch",
