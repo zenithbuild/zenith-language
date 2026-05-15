@@ -2,7 +2,7 @@
   "name": "@zenithbuild/language",
   "displayName": "Zenith Language Support",
   "description": "Syntax highlighting, snippets, and VS Code language-server integration for Zenith (.zen files)",
-  "version": "0.7.11",
+  "version": "0.7.12",
   "publisher": "ZenithBuild",
   "engines": {
     "vscode": "^1.80.0"
@@ -168,6 +168,21 @@
   "publishConfig": {
     "access": "public"
   },
+  "files": [
+    "after/",
+    "assets/",
+    "docs/",
+    "filetype.lua",
+    "ftdetect/",
+    "icons/",
+    "language-configuration.json",
+    "out/",
+    "plugin/",
+    "scripts/neovim-installed-smoke.mjs",
+    "snippets/",
+    "syntax/",
+    "syntaxes/"
+  ],
   "license": "MIT",
   "dependencies": {
     "vscode-languageclient": "^9.0.1"
