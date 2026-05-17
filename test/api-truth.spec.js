@@ -80,6 +80,38 @@ const STALE_PATTERNS = [
   {
     label: 'Legacy `zenOnMount` name (use canonical `zenMount`)',
     regex: /\bzenOnMount\b/
+  },
+  {
+    label: 'React `children:` prop (Zenith uses `<slot />`)',
+    regex: /\bchildren\s*:/
+  },
+  {
+    label: 'React `ReactNode` type',
+    regex: /\bReactNode\b/
+  },
+  {
+    label: 'React `PropsWithChildren` helper',
+    regex: /\bPropsWithChildren\b/
+  },
+  {
+    label: 'React-style `className=` attribute (canonical is `class=`)',
+    regex: /\bclassName\s*=/
+  },
+  {
+    label: 'Legacy router hook `useRoute(`',
+    regex: /\buseRoute\s*\(/
+  },
+  {
+    label: 'Legacy router hook `useRouter(`',
+    regex: /\buseRouter\s*\(/
+  },
+  {
+    label: 'Stale router function `prefetch(`',
+    regex: /\bprefetch\s*\(/
+  },
+  {
+    label: 'Legacy router module id `zenith/router`',
+    regex: /['"]zenith\/router['"]/
   }
 ];
 
@@ -215,4 +247,36 @@ test('grammar-test fixture authored examples use canonical Zenith API', () => {
   assertNoStalePatterns(`fixture ${path.basename(fixturePath)}`, fixture);
   assert.match(fixture, /on:click\s*=\s*\{/, 'fixture must use canonical on:click={handler}');
   assert.match(fixture, /\bstate\s+\w+\s*=/, 'fixture must use declarative `state name = ...`');
+});
+
+// ---------------------------------------------------------------------------
+// Slot + router/ZenLink coverage in snippets
+// ---------------------------------------------------------------------------
+
+test('snippets teach the implicit `<slot />` and never invent a `children` prop', () => {
+  const snippets = JSON.parse(fs.readFileSync(SNIPPETS_PATH, 'utf8'));
+  const serialized = JSON.stringify(snippets);
+  assert.match(serialized, /<slot/, 'snippets must demonstrate `<slot />`');
+  assert.doesNotMatch(serialized, /\bchildren\s*:/, 'snippets must not declare `children:` props');
+  assert.doesNotMatch(serialized, /\{\s*children\s*\}/, 'snippets must not embed `{children}` markup');
+});
+
+test('snippets include canonical @zenithbuild/router imports and ZenLink usage', () => {
+  const snippets = JSON.parse(fs.readFileSync(SNIPPETS_PATH, 'utf8'));
+  const serialized = JSON.stringify(snippets);
+  assert.match(
+    serialized,
+    /@zenithbuild\/router/,
+    'snippets must reference canonical `@zenithbuild/router` module'
+  );
+  assert.match(
+    serialized,
+    /<ZenLink\s+href=/,
+    'snippets must use `<ZenLink href="..">` (no `to=` prop)'
+  );
+  assert.doesNotMatch(
+    serialized,
+    /<ZenLink[^>]*\bto=/,
+    'snippets must not teach legacy `<ZenLink to="..">`'
+  );
 });

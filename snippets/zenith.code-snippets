@@ -107,5 +107,53 @@
       "$0"
     ],
     "description": "Canonical event binding"
+  },
+  "Slot Implicit": {
+    "prefix": "slot",
+    "body": [
+      "<slot />$0"
+    ],
+    "description": "Single implicit slot. Marks the position where the parent's inner markup is inlined at compile time. Zenith has no named slots and no `children` prop."
+  },
+  "Slot Block": {
+    "prefix": "slot block",
+    "body": [
+      "<slot>${1:default content}</slot>$0"
+    ],
+    "description": "Implicit slot with a default child template, used when the parent provides no inner markup."
+  },
+  "Component With Slot": {
+    "prefix": "component slot template",
+    "body": [
+      "<script lang=\"ts\">",
+      "export interface Props {}",
+      "</script>",
+      "",
+      "<${1:Card} class=\"${2:card}\">",
+      "\t<slot />",
+      "</${1:Card}>$0"
+    ],
+    "description": "Component template wrapping the implicit `<slot />`. Children inline at compile time; do not invent a `children` prop."
+  },
+  "Import Router Navigate": {
+    "prefix": "import zenith router navigate",
+    "body": [
+      "import { navigate } from '@zenithbuild/router'$0"
+    ],
+    "description": "Programmatic navigation. Canonical module is `@zenithbuild/router`; `zenith/router` is not a real import."
+  },
+  "Import ZenLink": {
+    "prefix": "import zenlink",
+    "body": [
+      "import ZenLink from '@zenithbuild/router/ZenLink.zen'$0"
+    ],
+    "description": "Default-import the canonical `<ZenLink>` anchor component."
+  },
+  "ZenLink Anchor": {
+    "prefix": "zenlink",
+    "body": [
+      "<ZenLink href=\"${1:/path}\">${2:label}</ZenLink>$0"
+    ],
+    "description": "Canonical soft-nav anchor. Required prop: `href`. No `to`, `preload`, `replace`, or `children` props."
   }
 }

@@ -19,9 +19,12 @@ zenith-language-server
 For Neovim syntax/filetype support, install this repository as a runtime plugin
 or add the installed package directory to `runtimepath` before opening `.zen`
 files, then source `plugin/zenith.lua` if your plugin manager does not source it
-automatically. See [manual Neovim verification](docs/manual-neovim-verification.md).
-Remove older local ftdetect rules that force `.zen` files to `html` or `zen`;
-the Zenith LSP config attaches to `filetype=zenith`.
+automatically. See [manual Neovim verification](docs/manual-neovim-verification.md)
+for attach/diagnostic checks, and
+[manual Neovim completion](docs/manual-neovim-completion.md) for wiring an
+insert-mode completion source (built-in LSP completion, nvim-cmp, or
+blink.cmp). Remove older local ftdetect rules that force `.zen` files to
+`html` or `zen`; the Zenith LSP config attaches to `filetype=zenith`.
 
 > Cursor/VS Code support requires installing the actual extension (Marketplace,
 > Open VSX, or a local `.vsix`). Running `npm i -g @zenithbuild/language` only

@@ -169,11 +169,95 @@ local hover = vim.lsp.buf_request_sync(bufnr, "textDocument/hover", {
   textDocument = { uri = uri },
   position = { line = 1, character = 15 }
 }, 3000)
-local completion = vim.lsp.buf_request_sync(bufnr, "textDocument/completion", {
+
+-- Completion #1: tag attribute context (e.g. on:click expected)
+local completion_attr = vim.lsp.buf_request_sync(bufnr, "textDocument/completion", {
   textDocument = { uri = uri },
   position = { line = 3, character = 12 }
 }, 3000)
-local completion_ok = completion ~= nil
+
+-- Completion #2: script-context primitives. Replace the buffer with a script
+-- block so we can assert the LSP teaches `signal`/`state`/`zenMount` here.
+local script_lines = {
+  '<script lang="ts">',
+  '',
+  '</script>',
+  '<p>hello</p>'
+}
+vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, script_lines)
+local script_completion = vim.lsp.buf_request_sync(bufnr, "textDocument/completion", {
+  textDocument = { uri = uri },
+  position = { line = 1, character = 0 }
+}, 3000)
+
+-- Collect labels from both responses
+local function collect_labels(response)
+  local labels = {}
+  if not response then return labels end
+  for _, payload in pairs(response) do
+    local items = payload.result
+    if type(items) == "table" and items.items then
+      items = items.items
+    end
+    if type(items) == "table" then
+      for _, item in ipairs(items) do
+        if type(item) == "table" and item.label then
+          table.insert(labels, item.label)
+        end
+      end
+    end
+  end
+  return labels
+end
+
+local attr_labels = collect_labels(completion_attr)
+local script_labels = collect_labels(script_completion)
+
+local function has(list, target)
+  for _, value in ipairs(list) do
+    if value == target then return true end
+  end
+  return false
+end
+
+if not has(attr_labels, "on:click") then
+  fail("Expected attribute-context completion to include `on:click`", {
+    completionLabels = attr_labels
+  })
+end
+
+local required_script = { "signal", "state", "zenMount" }
+for _, name in ipairs(required_script) do
+  if not has(script_labels, name) then
+    fail("Expected script-context completion to include `" .. name .. "`", {
+      completionLabels = script_labels
+    })
+  end
+end
+
+local forbidden = { "zenOnMount", "useState", "createSignal", "useRoute", "useRouter" }
+for _, name in ipairs(forbidden) do
+  if has(script_labels, name) then
+    fail("Script-context completion must not surface stale `" .. name .. "`", {
+      completionLabels = script_labels
+    })
+  end
+  if has(attr_labels, name) then
+    fail("Attribute-context completion must not surface stale `" .. name .. "`", {
+      completionLabels = attr_labels
+    })
+  end
+end
+
+-- Restore the valid buffer for subsequent diagnostic checks
+vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, valid_lines)
+if not vim.wait(10000, function()
+  return #vim.diagnostic.get(bufnr) == 0
+end, 50) then
+  fail("Expected diagnostics to clear after restoring valid buffer")
+end
+
+local completion_ok = #attr_labels > 0
 local hover_ok = hover ~= nil
 
 vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, {
@@ -213,6 +297,10 @@ write({
   },
   completionRequestReturned = completion_ok,
   hoverRequestReturned = hover_ok,
+  completionLabels = {
+    attrContext = attr_labels,
+    scriptContext = script_labels
+  },
   syntax = syntax
 })
 vim.cmd("qa!")

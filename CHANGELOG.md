@@ -5,6 +5,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.15] - 2026-05-17
+
+### Added
+
+- Slot snippets (`slot`, `slot block`, `component slot template`) teaching the
+  single implicit `<slot />` (and the `<slot>default</slot>` form). Zenith has
+  no named slots and no `children` prop; children inline at compile time.
+- `import router navigate`, `import zenlink`, and `zenlink` snippets covering
+  the canonical `@zenithbuild/router` import and `<ZenLink href="...">` usage.
+- API truth gates that block re-introduction of React-style `children:` /
+  `ReactNode` / `PropsWithChildren` / `className=`, legacy router hooks
+  (`useRoute`, `useRouter`, `prefetch`), the legacy `zenith/router` module
+  id, and `<ZenLink to=...>` props in any snippet body, prefix, or
+  description.
+- Extended Neovim smoke (`scripts/neovim-installed-smoke.mjs`) now collects
+  `completionLabels.attrContext` and `completionLabels.scriptContext` from
+  real `textDocument/completion` responses and asserts attribute completion
+  includes `on:click`, script completion includes `signal` / `state` /
+  `zenMount`, and neither surface includes stale `zenOnMount`, `useState`,
+  `createSignal`, `useRoute`, or `useRouter`.
+- New `docs/manual-neovim-completion.md` documenting how to wire
+  insert-mode completion via Neovim 0.11+ built-in (`vim.lsp.completion.enable`),
+  nvim-cmp, or blink.cmp — and how to read the smoke's JSON report when
+  completions appear missing.
+- Root `AGENTS.md` copied from the framework so future automation in this
+  repo follows the same per-file 500-line cap and canonical-API constraints.
+
+### Changed
+
+- `plugin/zenith.lua` now carries a header comment clarifying that it
+  intentionally wires only filetype/syntax and points at the new
+  `manual-neovim-completion.md` for completion UI wiring.
+- README cross-links both `manual-neovim-verification.md` (attach checks)
+  and `manual-neovim-completion.md` (insert-mode completion recipes).
+
 ## [0.7.14] - 2026-05-17
 
 ### 🐛 Bug Fixes
