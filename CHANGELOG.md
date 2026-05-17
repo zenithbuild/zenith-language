@@ -5,7 +5,44 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.7.12] - 2026-05-14
+## [0.7.13] - 2026-05-17
+
+### Added
+
+- `zen` legacy language id alias mapped to the canonical `zenith` grammar and
+  snippets. Activation event `onLanguage:zen` is now registered, so user
+  settings such as `"files.associations": { "*.zen": "zen" }` still load the
+  Zenith TextMate grammar instead of falling back to plain text.
+- Soft warning at activation when an opened `.zen`/`.zenx`/`.zen.html` buffer
+  is associated with a non-Zenith language id.
+- Context-aware forbidden-pattern truth gates (`test/api-truth.spec.js`) for
+  snippets, README canonical examples, manual verification doc examples,
+  and grammar-test fixtures. Stale framework idioms such as Vue `.value`,
+  React `useState`, Solid `createSignal`, Svelte `$:` and `{#if}/{#each}`,
+  vanilla `onclick=`, React `onClick=`, and Vue `@click=` are blocked from
+  editor-facing surfaces.
+- `signal counter`, `signal read`, and `signal write` snippets demonstrating
+  the canonical `.get()` / `.set()` API.
+- Manual Cursor verification checklist (`docs/manual-cursor-verification.md`).
+- Release + dist-tag policy doc (`docs/release-and-dist-tags.md`).
+- Pack-payload assertion script (`scripts/assert-pack-payload.mjs`) and a
+  `verify:pack` npm script.
+- `prepublishOnly` lifecycle that builds the server + extension, runs the
+  full test suite, and asserts the npm payload before publish.
+
+### Changed
+
+- Grammar test fixture (`test/fixtures/grammar-test.zen`) now demonstrates
+  canonical `state count = 0`, `on:click={handler}`, and `zenMount(() => ...)`
+  instead of the previous `onClick={() => increment()}` and `zenOnMount`
+  patterns.
+- README troubleshooting section calls out the `files.associations` and
+  duplicate-extension failure modes and the difference between `npm i -g
+  @zenithbuild/language` (Neovim runtime files only) and installing the VS
+  Code extension.
+- CI release workflow publishes under `--tag next` instead of moving `latest`
+  automatically. `latest` may only be promoted by a human after the Cursor
+  and Neovim verification checklists pass on the published tarball.
 
 ### Added
 

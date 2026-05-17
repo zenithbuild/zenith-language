@@ -1,26 +1,26 @@
-<script setup="ts" lang="ts">
-  state count = 0
-  
+<script lang="ts">
+  state count = 0;
+
   function increment() {
-    count = count + 1
+    count += 1;
   }
-  
+
   function decrement() {
-    count = count - 1
+    count -= 1;
   }
-  
-  zenOnMount(() => {
-    console.log('🚀 Zenith app mounted!')
-  })
+
+  zenMount(() => {
+    console.log('Zenith app mounted');
+  });
 </script>
 
-<div class="card" onClick={() => increment()} disabled>
+<div class="card" disabled>
   <h1>Counter: {count}</h1>
-  <button onClick={() => increment()}>+</button>
-  <button onClick={() => decrement()}>-</button>
+  <button on:click={increment}>+</button>
+  <button on:click={decrement}>-</button>
 </div>
 
-<Counter count={count} :data-id="myId" />
+<Counter count={count} />
 
 <style scoped>
   .card {
@@ -28,7 +28,7 @@
     border-radius: 8px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   }
-  
+
   button {
     margin: 0.5rem;
     padding: 0.5rem 1rem;

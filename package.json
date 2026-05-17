@@ -2,7 +2,7 @@
   "name": "@zenithbuild/language",
   "displayName": "Zenith Language Support",
   "description": "Syntax highlighting, snippets, and VS Code language-server integration for Zenith (.zen files)",
-  "version": "0.7.12",
+  "version": "0.7.13",
   "publisher": "ZenithBuild",
   "engines": {
     "vscode": "^1.80.0"
@@ -10,13 +10,14 @@
   "main": "./out/extension.js",
   "activationEvents": [
     "onLanguage:zenith",
+    "onLanguage:zen",
     "onCommand:zenith.runContractPack",
     "onCommand:zenith.runLegacyTests",
     "onCommand:zenith.build",
     "onCommand:zenith.restartServer"
   ],
   "scripts": {
-    "test": "node --test test/grammar-snippets.spec.js",
+    "test": "node --test test/grammar-snippets.spec.js test/api-truth.spec.js",
     "smoke:neovim": "node scripts/neovim-installed-smoke.mjs",
     "build:server": "cd ../zenith-language-server && bun run build",
     "compile": "bun x esbuild src/extension.ts --bundle --outfile=out/extension.js --external:vscode --external:vscode-languageclient/node --format=cjs --platform=node && cp ../zenith-language-server/dist/server.js out/server.js",
@@ -30,7 +31,9 @@
     "release:patch": "bun run scripts/release.ts --bump=patch",
     "release:minor": "bun run scripts/release.ts --bump=minor",
     "release:major": "bun run scripts/release.ts --bump=major",
-    "build": "tsc"
+    "build": "tsc",
+    "verify:pack": "node scripts/assert-pack-payload.mjs",
+    "prepublishOnly": "bun run build:server && bun run compile && npm test && npm run verify:pack"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
@@ -64,17 +67,44 @@
           ".zenx"
         ],
         "configuration": "./language-configuration.json"
+      },
+      {
+        "id": "zen",
+        "aliases": [
+          "Zen (legacy alias)"
+        ],
+        "extensions": [],
+        "configuration": "./language-configuration.json"
       }
     ],
     "snippets": [
       {
         "language": "zenith",
         "path": "./snippets/zenith.code-snippets"
+      },
+      {
+        "language": "zen",
+        "path": "./snippets/zenith.code-snippets"
       }
     ],
     "grammars": [
       {
         "language": "zenith",
+        "scopeName": "text.html.zenith",
+        "path": "./syntaxes/zenith.tmLanguage.json",
+        "embeddedLanguages": {
+          "source.js": "javascript",
+          "source.ts": "typescript",
+          "source.ts.embedded.zenith": "typescript",
+          "source.css": "css",
+          "text.html.basic": "html",
+          "meta.embedded.block.javascript": "javascript",
+          "meta.embedded.block.typescript": "typescript",
+          "meta.embedded.block.css": "css"
+        }
+      },
+      {
+        "language": "zen",
         "scopeName": "text.html.zenith",
         "path": "./syntaxes/zenith.tmLanguage.json",
         "embeddedLanguages": {
@@ -102,11 +132,25 @@
         },
         "editor.autoClosingBrackets": "always"
       },
+      "[zen]": {
+        "editor.formatOnSave": true,
+        "editor.wordBasedSuggestions": "off",
+        "editor.suggest.insertMode": "replace",
+        "editor.semanticHighlighting.enabled": true,
+        "editor.quickSuggestions": {
+          "other": true,
+          "comments": false,
+          "strings": true
+        },
+        "editor.autoClosingBrackets": "always"
+      },
       "emmet.includeLanguages": {
-        "zenith": "html"
+        "zenith": "html",
+        "zen": "html"
       },
       "emmet.syntaxProfiles": {
-        "zenith": "html"
+        "zenith": "html",
+        "zen": "html"
       }
     },
     "commands": [

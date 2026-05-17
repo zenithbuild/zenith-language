@@ -73,6 +73,32 @@ test('package.json contributes single grammar for zenith', () => {
   assert.equal(zenithGrammars[0]?.scopeName, 'text.html.zenith');
 });
 
+test('package.json contributes legacy zen alias mapped to zenith grammar', () => {
+  const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
+
+  const languages = pkg.contributes?.languages || [];
+  const zenLang = languages.find((l) => l.id === 'zen');
+  assert.ok(zenLang, 'zen language id must be contributed as a back-compat alias');
+  assert.equal(zenLang?.configuration, './language-configuration.json');
+
+  const grammars = pkg.contributes?.grammars || [];
+  const zenGrammar = grammars.find((g) => g.language === 'zen');
+  assert.ok(zenGrammar, 'zen language must have a grammar contribution');
+  assert.equal(zenGrammar?.scopeName, 'text.html.zenith', 'zen alias must reuse the zenith TextMate scope');
+  assert.equal(zenGrammar?.path, './syntaxes/zenith.tmLanguage.json', 'zen alias must point at the same grammar file');
+
+  const snippets = pkg.contributes?.snippets || [];
+  const zenSnippets = snippets.find((s) => s.language === 'zen');
+  assert.ok(zenSnippets, 'zen language must receive the same snippets contribution');
+  assert.equal(zenSnippets?.path, './snippets/zenith.code-snippets');
+
+  const activationEvents = pkg.activationEvents || [];
+  assert.ok(
+    activationEvents.includes('onLanguage:zen'),
+    'onLanguage:zen activation event must be registered for the alias'
+  );
+});
+
 test('package metadata and README describe VS Code role without standalone server drift', () => {
   const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
   const readme = fs.readFileSync(path.join(ROOT, 'README.md'), 'utf8');
