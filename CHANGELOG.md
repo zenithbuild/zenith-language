@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.14] - 2026-05-17
+
+### 🐛 Bug Fixes
+
+- ****editor**: syntax alias, API truth gates, and publish hardening (0.7.13)** (6946222)
+  > Add zen language-id alias, canonical snippets/API truth gates, pack verification, and next-only publish policy. Closes #4.
+
 ## [0.7.13] - 2026-05-17
 
 ### Added

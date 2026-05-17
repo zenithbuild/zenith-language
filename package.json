@@ -2,7 +2,7 @@
   "name": "@zenithbuild/language",
   "displayName": "Zenith Language Support",
   "description": "Syntax highlighting, snippets, and VS Code language-server integration for Zenith (.zen files)",
-  "version": "0.7.13",
+  "version": "0.7.14",
   "publisher": "ZenithBuild",
   "engines": {
     "vscode": "^1.80.0"
