@@ -11,10 +11,27 @@
   "Signal Counter": {
     "prefix": "signal counter",
     "body": [
-      "const ${1:count} = signal(${2:0})",
+      "const ${1:count} = signal(${2:0});",
+      "function increment${1/(.*)/${1:/capitalize}/}() {",
+      "\t${1:count}.set(${1:count}.get() + 1);",
+      "}",
       "$0"
     ],
-    "description": "Signal with get/set"
+    "description": "Canonical Zenith signal: explicit .get() / .set() API"
+  },
+  "Signal Read": {
+    "prefix": "signal read",
+    "body": [
+      "${1:count}.get()$0"
+    ],
+    "description": "Read a Zenith signal value (canonical .get())"
+  },
+  "Signal Write": {
+    "prefix": "signal write",
+    "body": [
+      "${1:count}.set(${2:nextValue})$0"
+    ],
+    "description": "Write a Zenith signal value (canonical .set())"
   },
   "Ref DOM": {
     "prefix": "ref dom",

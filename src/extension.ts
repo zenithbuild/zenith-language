@@ -37,7 +37,10 @@ async function startLanguageClient(context: vscode.ExtensionContext): Promise<vo
     };
 
     const clientOptions: LanguageClientOptions = {
-        documentSelector: [{ scheme: 'file', language: 'zenith' }],
+        documentSelector: [
+            { scheme: 'file', language: 'zenith' },
+            { scheme: 'file', language: 'zen' }
+        ],
         synchronize: {
             configurationSection: 'zenith',
             fileEvents: vscode.workspace.createFileSystemWatcher('**/*.{zen,zen.html,zenx}')
@@ -98,10 +101,47 @@ async function runInWorkspaceTerminal(command: string, terminalName: string): Pr
     terminal.sendText(command);
 }
 
+const ZEN_FILE_PATTERN = /\.(zen|zenx|zen\.html)$/;
+const KNOWN_ZEN_LANGUAGE_IDS = new Set(['zenith', 'zen']);
+const MISCONFIG_WARNING_STATE_KEY = 'zenith.languageAssociationWarningShown';
+
+async function maybeWarnOnZenAssociationMisconfig(context: vscode.ExtensionContext): Promise<void> {
+    if (context.workspaceState.get<boolean>(MISCONFIG_WARNING_STATE_KEY) === true) {
+        return;
+    }
+
+    const misconfigured = vscode.workspace.textDocuments.find((doc) => {
+        const filename = doc.uri.fsPath;
+        if (!ZEN_FILE_PATTERN.test(filename)) {
+            return false;
+        }
+        return !KNOWN_ZEN_LANGUAGE_IDS.has(doc.languageId);
+    });
+
+    if (!misconfigured) {
+        return;
+    }
+
+    await context.workspaceState.update(MISCONFIG_WARNING_STATE_KEY, true);
+    const choice = await vscode.window.showWarningMessage(
+        `Zenith: ${misconfigured.languageId === '' ? 'untyped' : `\`${misconfigured.languageId}\``} is set as the language for ${misconfigured.uri.fsPath}. Zenith highlighting requires language id "zenith" (or alias "zen"). Check files.associations.`,
+        'Open Settings',
+        'Open README'
+    );
+
+    if (choice === 'Open Settings') {
+        await vscode.commands.executeCommand('workbench.action.openSettings', 'files.associations');
+    } else if (choice === 'Open README') {
+        await vscode.env.openExternal(vscode.Uri.parse('https://github.com/zenithbuild/zenith-language#troubleshooting'));
+    }
+}
+
 export function activate(context: vscode.ExtensionContext) {
     startLanguageClient(context).catch((error) => {
         vscode.window.showErrorMessage(`Zenith: Failed to start language server: ${String(error)}`);
     });
+
+    void maybeWarnOnZenAssociationMisconfig(context);
 
     context.subscriptions.push(
         vscode.commands.registerCommand('zenith.runContractPack', async () => {
