@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.0] - 2026-05-18
+
+### ✨ Features
+
+- ****editor**: slot/router snippets, Neovim completion smoke, AGENTS contract (0.7.15)** (c6a565c)
+  > Add canonical slot and router/ZenLink snippets, extend Neovim smoke to assert
+  > real LSP completion labels, document insert-mode completion wiring, and copy
+  > framework AGENTS.md contract.
+  > 
+  > Closes editor API coverage work for 0.7.15. No publish/tag/latest from this merge.
+
+### 📚 Documentation
+
+- **record post-merge 0.7.14 installed editor verification gate** (9973514)
+  > Documents Cursor VSIX install, pack/test results, and pre-latest checklist
+  > status. No screenshots; token-inspector evidence remains a manual step.
+  > 
+  > Co-authored-by: Cursor <cursoragent@cursor.com>
+
 ## [0.7.15] - 2026-05-17
 
 ### Added
