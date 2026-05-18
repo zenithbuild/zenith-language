@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- Bundled `out/server.js` will be rebuilt from
+  `@zenithbuild/language-server` once that package ships its
+  context-aware member completion change. The extension's
+  `compile` script copies `../zenith-language-server/dist/server.js`
+  into the VSIX, so Cursor users only see the new completion behavior
+  after this package is republished alongside the new server.
+- No source changes in this package; the bump exists solely to pick up
+  the rebuilt server bundle.
+
 ## [0.8.0] - 2026-05-18
 
 ### ✨ Features
