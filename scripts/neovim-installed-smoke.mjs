@@ -176,8 +176,8 @@ local completion_attr = vim.lsp.buf_request_sync(bufnr, "textDocument/completion
   position = { line = 3, character = 12 }
 }, 3000)
 
--- Completion #2: script-context primitives. Replace the buffer with a script
--- block so we can assert the LSP teaches `signal`/`state`/`zenMount` here.
+-- Completion #2: script-context primitives. Replace buffer with a script
+-- block so we can assert the LSP teaches signal, state, and zenMount here.
 local script_lines = {
   '<script lang="ts">',
   '',
@@ -221,7 +221,7 @@ local function has(list, target)
 end
 
 if not has(attr_labels, "on:click") then
-  fail("Expected attribute-context completion to include `on:click`", {
+  fail("Expected attribute-context completion to include on:click", {
     completionLabels = attr_labels
   })
 end
@@ -229,7 +229,7 @@ end
 local required_script = { "signal", "state", "zenMount" }
 for _, name in ipairs(required_script) do
   if not has(script_labels, name) then
-    fail("Expected script-context completion to include `" .. name .. "`", {
+    fail("Expected script-context completion to include " .. name, {
       completionLabels = script_labels
     })
   end
@@ -238,12 +238,12 @@ end
 local forbidden = { "zenOnMount", "useState", "createSignal", "useRoute", "useRouter" }
 for _, name in ipairs(forbidden) do
   if has(script_labels, name) then
-    fail("Script-context completion must not surface stale `" .. name .. "`", {
+    fail("Script-context completion must not surface stale " .. name, {
       completionLabels = script_labels
     })
   end
   if has(attr_labels, name) then
-    fail("Attribute-context completion must not surface stale `" .. name .. "`", {
+    fail("Attribute-context completion must not surface stale " .. name, {
       completionLabels = attr_labels
     })
   end
