@@ -1,3 +1,11 @@
+-- Zenith Neovim runtime: filetype + syntax wiring only.
+--
+-- This plugin deliberately does NOT start the language server or wire up an
+-- insert-mode completion source. Both decisions are user-stack specific (e.g.
+-- built-in `vim.lsp.completion.enable`, nvim-cmp, blink.cmp, etc.).
+--
+-- See `docs/manual-neovim-completion.md` for recipes covering each option.
+
 if vim and vim.filetype then
   vim.filetype.add({
     extension = {
