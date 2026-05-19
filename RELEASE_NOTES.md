@@ -1,29 +1,26 @@
-# 🚀 @zenithbuild/language v0.8.1
+# 🚀 @zenithbuild/language v0.9.0
 
-## [0.8.1] - 2026-05-19
+## [0.9.0] - 2026-05-19
 
 ### Changed
 
-- Rebuilt release metadata for the VS Code/Cursor extension package so it can
-  ship the paired `@zenithbuild/language-server` type-aware completion update.
-- Kept LSP source behavior owned by `@zenithbuild/language-server`; this package
-  owns editor extension/runtime assets and bundles the server into the VSIX.
-- Release prep must build extension artifacts before `npm run verify:pack`,
-  because a clean checkout does not contain `out/extension.js` or
-  `out/server.js`.
-
-
+- Bundles `@zenithbuild/language-server@0.9.0` with IntelliSense ranking and
+  branded completion metadata for Cursor/VS Code/Neovim.
+- Portable snippets across editors (no VS Code-only transform syntax).
+- Installed Neovim smoke script parse fix (`neovim-installed-smoke.mjs`).
+- Bundled-server acceptance test guards `zenithSortText` / branded member detail
+  in `out/server.js`.
 
 ## 📦 Installation
 
 ```bash
-bun add @zenithbuild/language@0.8.1
+bun add @zenithbuild/language@0.9.0
 ```
 
 *or with npm:*
 
 ```bash
-npm install @zenithbuild/language@0.8.1
+npm install @zenithbuild/language@0.9.0
 ```
 
 ---

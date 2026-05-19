@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.0] - 2026-05-19
+
+### Changed
+
+- Bundles `@zenithbuild/language-server@0.9.0` with IntelliSense ranking and
+  branded completion metadata (`zenithSortText`, `Zenith Signal.get/set/subscribe`,
+  early `sortText` for `sig` → `signal`, member `filterText` and **Docs:** lines).
+  Rebuild with `bun run build:server && bun run compile` before packing or
+  installing the VSIX.
+- Portable snippets: removed VS Code-only placeholder transforms so Neovim
+  `vim.snippet`, blink.cmp, and VS Code/Cursor expand the same bodies.
+- Fixed installed Neovim smoke script template-literal hygiene so
+  `scripts/neovim-installed-smoke.mjs` parses under Node `--check`.
+
+### Added
+
+- Acceptance test asserts bundled `out/server.js` includes branded completion
+  metadata (`Zenith Signal.set`, `zenithSortText`) after `bun run build:server`
+  and `bun run compile`.
+
 ## [0.8.1] - 2026-05-19
 
 ### Changed
@@ -21,14 +41,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documented that release prep must build the extension artifacts before
   `npm run verify:pack`, because a clean checkout does not contain
   `out/extension.js` or `out/server.js`.
-
-## [Unreleased]
-
-### Added
-
-- Acceptance test asserts bundled `out/server.js` includes branded completion
-  metadata (`Zenith Signal.set`, `zenithSortText`) after `bun run build:server`
-  and `bun run compile`.
 
 ## [0.8.0] - 2026-05-18
 
