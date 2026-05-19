@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Rebuilt `out/server.js` from `@zenithbuild/language-server` with branded completion
+  metadata (`Zenith Signal.set`, early `sortText` for `sig` → `signal`, member
+  `filterText` / **Docs:** lines). Install a fresh VSIX or run `bun run compile`
+  after pulling the matching language-server revision to see ranking improvements
+  in Cursor/VS Code.
+
 - Bundled `out/server.js` will be rebuilt from
   `@zenithbuild/language-server` once that package ships its
   context-aware member completion change. The extension's
@@ -17,6 +23,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   after this package is republished alongside the new server.
 - No source changes in this package; the bump exists solely to pick up
   the rebuilt server bundle.
+- Snippet portability hardening: removed VS Code-only placeholder transforms
+  from `state toggle` and `signal counter` snippets so Neovim `vim.snippet`,
+  blink.cmp/nvim-cmp, and VS Code/Cursor all expand the same snippet bodies.
+  Signal snippet function naming now uses an independent tab stop to avoid
+  variable/function declaration collisions.
 
 ## [0.8.0] - 2026-05-18
 
