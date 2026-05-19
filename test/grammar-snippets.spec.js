@@ -150,6 +150,14 @@ test('neovim-installed-smoke.mjs parses as valid ECMAScript (template literal hy
   assert.equal(result.status, 0, result.stderr || result.stdout);
 });
 
+test('bundled out/server.js includes branded completion metadata from language-server', () => {
+  const serverPath = path.join(ROOT, 'out', 'server.js');
+  assert.ok(fs.existsSync(serverPath), 'run bun run compile after building language-server');
+  const bundle = fs.readFileSync(serverPath, 'utf8');
+  assert.match(bundle, /Zenith Signal\.set/, 'bundled server must include branded member completion detail');
+  assert.match(bundle, /zenithSortText/, 'bundled server must include completion ranking helper');
+});
+
 test('Neovim runtime smoke detects filetype and syntax when nvim is available', { skip: !hasNeovim() }, () => {
   const fixture = path.join(ROOT, 'test', 'fixtures', 'grammar-test.zen');
   const cleanHome = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'zenith-nvim-home-'));

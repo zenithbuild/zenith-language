@@ -24,6 +24,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Acceptance test asserts bundled `out/server.js` includes branded completion
+  metadata (`Zenith Signal.set`, `zenithSortText`) after `bun run build:server`
+  and `bun run compile`.
+
 ## [0.8.0] - 2026-05-18
 
 ### ✨ Features
