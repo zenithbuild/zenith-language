@@ -142,6 +142,14 @@ test('Neovim runtime files provide Zenith filetype and syntax fallback', () => {
   assert.match(readme, /no semantic tokens yet/);
 });
 
+test('neovim-installed-smoke.mjs parses as valid ECMAScript (template literal hygiene)', () => {
+  const script = path.join(ROOT, 'scripts', 'neovim-installed-smoke.mjs');
+  const result = childProcess.spawnSync(process.execPath, ['--check', script], {
+    encoding: 'utf8'
+  });
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+});
+
 test('Neovim runtime smoke detects filetype and syntax when nvim is available', { skip: !hasNeovim() }, () => {
   const fixture = path.join(ROOT, 'test', 'fixtures', 'grammar-test.zen');
   const cleanHome = fs.mkdtempSync(path.join(require('node:os').tmpdir(), 'zenith-nvim-home-'));
