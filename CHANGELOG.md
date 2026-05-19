@@ -5,18 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.8.1] - 2026-05-19
 
 ### Changed
 
-- Bundled `out/server.js` will be rebuilt from
-  `@zenithbuild/language-server` once that package ships its
-  context-aware member completion change. The extension's
-  `compile` script copies `../zenith-language-server/dist/server.js`
-  into the VSIX, so Cursor users only see the new completion behavior
-  after this package is republished alongside the new server.
-- No source changes in this package; the bump exists solely to pick up
-  the rebuilt server bundle.
+- Rebuilt release metadata for the VS Code/Cursor extension package so it can
+  ship the paired `@zenithbuild/language-server` type-aware completion update.
+  The extension's `compile` script copies
+  `../zenith-language-server/dist/server.js` into the VSIX, so Cursor and VS
+  Code users receive the new completion behavior through this package's bundled
+  server output.
+- Kept the package role explicit: this package owns editor extension/runtime
+  assets and bundles the server; LSP source behavior remains owned by
+  `@zenithbuild/language-server`.
+- Documented that release prep must build the extension artifacts before
+  `npm run verify:pack`, because a clean checkout does not contain
+  `out/extension.js` or `out/server.js`.
+
+## [Unreleased]
 
 ## [0.8.0] - 2026-05-18
 

@@ -1,29 +1,29 @@
-# 🚀 zenith-language v0.4.8
+# 🚀 @zenithbuild/language v0.8.1
 
-## [0.4.8] - 2026-02-15
+## [0.8.1] - 2026-05-19
 
-### ✨ Tooling Updates
+### Changed
 
-- Added multi-root-aware commands:
-  - Run Contract Pack
-  - Run Legacy Tests
-  - Build
-  - Restart Server
-- Added `zenith.languageServer.path` setting for custom server path override.
-- Added `zenith.componentScripts` setting surfaced in VS Code configuration and synchronized to the language server.
+- Rebuilt release metadata for the VS Code/Cursor extension package so it can
+  ship the paired `@zenithbuild/language-server` type-aware completion update.
+- Kept LSP source behavior owned by `@zenithbuild/language-server`; this package
+  owns editor extension/runtime assets and bundles the server into the VSIX.
+- Release prep must build extension artifacts before `npm run verify:pack`,
+  because a clean checkout does not contain `out/extension.js` or
+  `out/server.js`.
 
 
 
 ## 📦 Installation
 
 ```bash
-bun add zenith-language@0.4.8
+bun add @zenithbuild/language@0.8.1
 ```
 
 *or with npm:*
 
 ```bash
-npm install zenith-language@0.4.8
+npm install @zenithbuild/language@0.8.1
 ```
 
 ---
