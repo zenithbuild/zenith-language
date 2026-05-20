@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.1] - 2026-05-19
+
+### Fixed
+
+- Fixed Cursor/VS Code extension activation by bundling the language client into
+  `out/extension.js` while keeping `vscode` external.
+- Fixed VSIX runtime packaging so the extension no longer requires a shipped
+  `node_modules` directory.
+- Bundled the server output used by the extension runtime so Cursor can start
+  Zenith LSP completions from the installed VSIX.
+
+### Added
+
+- Added activation/client diagnostics for extension startup and completion
+  request tracing.
+- Added package-client tests for activation metadata, bundled runtime checks,
+  and bundled completion ranking markers.
+
+### Verified
+
+- Confirmed Cursor completion requests now reach Zenith LSP for `sig`,
+  `count.`, `count.s`, and `on:`.
+
 ## [0.9.0] - 2026-05-19
 
 ### Changed

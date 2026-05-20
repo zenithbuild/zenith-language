@@ -2,7 +2,7 @@
   "name": "@zenithbuild/language",
   "displayName": "Zenith Language Support",
   "description": "Syntax highlighting, snippets, and VS Code language-server integration for Zenith (.zen files)",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "publisher": "ZenithBuild",
   "engines": {
     "vscode": "^1.80.0"
@@ -17,10 +17,10 @@
     "onCommand:zenith.restartServer"
   ],
   "scripts": {
-    "test": "node --test test/grammar-snippets.spec.js test/api-truth.spec.js",
+    "test": "node --test test/grammar-snippets.spec.js test/api-truth.spec.js test/package-client.spec.js",
     "smoke:neovim": "node scripts/neovim-installed-smoke.mjs",
     "build:server": "cd ../zenith-language-server && bun run build",
-    "compile": "bun x esbuild src/extension.ts --bundle --outfile=out/extension.js --external:vscode --external:vscode-languageclient/node --format=cjs --platform=node && cp ../zenith-language-server/dist/server.js out/server.js",
+    "compile": "bun x esbuild src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node && bun x esbuild ../zenith-language-server/src/server.ts --bundle --outfile=out/server.js --platform=node --format=cjs --external:@zenithbuild/compiler",
     "watch": "bun run compile -- --watch",
     "build:markplace": "bun run build:marketplace",
     "build:marketplace": "bun run build:server && bun run compile && node scripts/build.js marketplace",
