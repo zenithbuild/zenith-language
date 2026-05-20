@@ -15,6 +15,8 @@ const ROOT = path.resolve(__dirname, '..');
 const PACKAGE_JSON_PATH = path.join(ROOT, 'package.json');
 const EXTENSION_BUNDLE_PATH = path.join(ROOT, 'out', 'extension.js');
 const SERVER_BUNDLE_PATH = path.join(ROOT, 'out', 'server.js');
+const BUILD_SCRIPT_PATH = path.join(ROOT, 'scripts', 'build.js');
+const VSCODEIGNORE_PATH = path.join(ROOT, '.vscodeignore');
 
 function readPackageJson() {
   return JSON.parse(fs.readFileSync(PACKAGE_JSON_PATH, 'utf8'));
@@ -29,6 +31,32 @@ test('package contributes Zenith language ids and activation events', () => {
   const activationEvents = new Set(manifest.activationEvents || []);
   assert.ok(activationEvents.has('onLanguage:zenith'), 'package must activate on zenith documents');
   assert.ok(activationEvents.has('onLanguage:zen'), 'package must activate on legacy zen documents');
+  assert.ok(
+    Boolean(manifest.dependencies?.['@zenithbuild/compiler']),
+    'package must depend on @zenithbuild/compiler so the bundled server can resolve it in VSIX runtime'
+  );
+  assert.equal(
+    manifest.contributes?.configuration?.properties?.['zenith.componentScripts'],
+    undefined,
+    'extension must not contribute stale component-script policy settings'
+  );
+});
+
+test('marketplace packaging installs compiler dependency for externalized server bundle', () => {
+  const buildScript = fs.readFileSync(BUILD_SCRIPT_PATH, 'utf8');
+  assert.match(buildScript, /REQUIRED_PACKAGING_DEPS = \[[^\]]*['"]@zenithbuild\/compiler['"]/);
+  assert.match(buildScript, /stripCompilerOptionalPlatformDepsForPackaging/);
+  assert.match(buildScript, /moveCompilerPlatformPackagesForPackaging/);
+  assert.match(buildScript, /optionalDependencies = \{\}/);
+  assert.match(buildScript, /\.zenith-vsix-hidden-platform-packages/);
+});
+
+test('VSIX packaging allows compiler meta package without local platform binary allow-list', () => {
+  const ignore = fs.readFileSync(VSCODEIGNORE_PATH, 'utf8');
+  assert.match(ignore, /node_modules\/\*\*/);
+  assert.match(ignore, /!node_modules\/@zenithbuild\/compiler\/\*\*/);
+  assert.match(ignore, /node_modules\/@zenithbuild\/compiler-\*\/\*\*/);
+  assert.doesNotMatch(ignore, /!node_modules\/@zenithbuild\/compiler-(?:darwin|linux|win32)/);
 });
 
 test('extension bundle is self-contained for the language client runtime', () => {

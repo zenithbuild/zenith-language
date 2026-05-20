@@ -2,7 +2,7 @@
   "name": "@zenithbuild/language",
   "displayName": "Zenith Language Support",
   "description": "Syntax highlighting, snippets, and VS Code language-server integration for Zenith (.zen files)",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "publisher": "ZenithBuild",
   "engines": {
     "vscode": "^1.80.0"
@@ -179,15 +179,6 @@
       "type": "object",
       "title": "Zenith",
       "properties": {
-        "zenith.componentScripts": {
-          "type": "string",
-          "enum": [
-            "forbid",
-            "allow"
-          ],
-          "default": "forbid",
-          "description": "Component script contract mode. 'forbid' enforces structural-only components; 'allow' disables this diagnostic."
-        },
         "zenith.strictDomLints": {
           "type": "boolean",
           "default": false,
@@ -229,6 +220,7 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "@zenithbuild/compiler": "^0.7.11",
     "vscode-languageclient": "^9.0.1"
   }
 }

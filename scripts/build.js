@@ -29,7 +29,10 @@ const TARGETS = {
 const packageJsonPath = path.join(__dirname, '..', 'package.json');
 const rootDir = path.join(__dirname, '..');
 const EXTENSION_ID = 'zenith-language';
-const REQUIRED_PACKAGING_DEPS = ['vscode-languageclient'];
+const REQUIRED_PACKAGING_DEPS = ['vscode-languageclient', '@zenithbuild/compiler'];
+const compilerPackageJsonPath = path.join(rootDir, 'node_modules', '@zenithbuild', 'compiler', 'package.json');
+const compilerScopeDir = path.join(rootDir, 'node_modules', '@zenithbuild');
+const hiddenCompilerPlatformsDir = path.join(rootDir, '.zenith-vsix-hidden-platform-packages');
 
 function readPackageJsonRaw() {
     return fs.readFileSync(packageJsonPath, 'utf8');
@@ -50,6 +53,50 @@ function ensurePackagingDependencies() {
         cwd: rootDir,
         stdio: 'inherit'
     });
+}
+
+function stripCompilerOptionalPlatformDepsForPackaging() {
+    if (!fs.existsSync(compilerPackageJsonPath)) {
+        return () => {};
+    }
+
+    const raw = fs.readFileSync(compilerPackageJsonPath, 'utf8');
+    const pkg = JSON.parse(raw);
+    if (pkg.optionalDependencies) {
+        pkg.optionalDependencies = {};
+        fs.writeFileSync(compilerPackageJsonPath, JSON.stringify(pkg, null, 2) + '\n');
+    }
+
+    return () => fs.writeFileSync(compilerPackageJsonPath, raw);
+}
+
+function moveCompilerPlatformPackagesForPackaging() {
+    if (!fs.existsSync(compilerScopeDir)) {
+        return () => {};
+    }
+
+    fs.rmSync(hiddenCompilerPlatformsDir, { recursive: true, force: true });
+    fs.mkdirSync(hiddenCompilerPlatformsDir, { recursive: true });
+
+    const moved = [];
+    for (const entry of fs.readdirSync(compilerScopeDir)) {
+        if (!entry.startsWith('compiler-')) {
+            continue;
+        }
+        const source = path.join(compilerScopeDir, entry);
+        const target = path.join(hiddenCompilerPlatformsDir, entry);
+        fs.renameSync(source, target);
+        moved.push({ source, target });
+    }
+
+    return () => {
+        for (const { source, target } of moved.reverse()) {
+            if (fs.existsSync(target)) {
+                fs.renameSync(target, source);
+            }
+        }
+        fs.rmSync(hiddenCompilerPlatformsDir, { recursive: true, force: true });
+    };
 }
 
 function build(target) {
@@ -76,11 +123,15 @@ function build(target) {
     packageJson.publisher = config.publisher;
     packageJson.name = EXTENSION_ID;
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 4) + '\n');
+    let restoreCompilerPackageJson = () => {};
+    let restoreCompilerPlatformPackages = () => {};
 
     try {
         // Run vsce package
         console.log('📦 Packaging extension...\n');
         ensurePackagingDependencies();
+        restoreCompilerPackageJson = stripCompilerOptionalPlatformDepsForPackaging();
+        restoreCompilerPlatformPackages = moveCompilerPlatformPackagesForPackaging();
         if (fs.existsSync(outputPath)) {
             fs.unlinkSync(outputPath);
         }
@@ -111,6 +162,8 @@ function build(target) {
         return outputName;
 
     } finally {
+        restoreCompilerPlatformPackages();
+        restoreCompilerPackageJson();
         // Restore package.json exactly as it was before this build
         fs.writeFileSync(packageJsonPath, originalPackageJsonRaw);
     }

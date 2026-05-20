@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.2] - 2026-05-20
+
+### Fixed
+
+- Removed the obsolete `zenith.componentScripts` contributed setting from the
+  standalone VS Code/Cursor extension package.
+- Packaged `@zenithbuild/compiler` metadata with the VSIX so the bundled server
+  can resolve the compiler package path from the installed extension runtime.
+- Excluded local-only compiler platform artifacts such as
+  `@zenithbuild/compiler-darwin-arm64` from the VSIX payload.
+- Documented the controlled `ZENITH-COMPILER-UNAVAILABLE` fallback when a
+  matching native compiler package is unavailable in the editor runtime.
+- Added package tests covering compiler dependency packaging and stale
+  component-script configuration removal.
+
+### Verified
+
+- `bun run build:server`
+- `bun run compile`
+- `npm test` — 24 tests pass.
+- `npm run verify:pack`
+- `bun run build:marketplace`
+- `npm pack --dry-run`
+- `git diff --check`
+
 ## [0.9.1] - 2026-05-19
 
 ### Fixed

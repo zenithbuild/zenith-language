@@ -44,7 +44,6 @@ blink.cmp). Remove older local ftdetect rules that force `.zen` files to
 
 ## Settings
 
-- `zenith.componentScripts`: `forbid` (default) or `allow`.
 - `zenith.languageServer.path`: optional absolute or workspace-relative path override for the language server entry file.
 
 The extension supports multi-root workspaces. Command execution prompts for the target workspace folder when multiple folders are open.
@@ -88,6 +87,14 @@ bun run build:all
 ```
 
 ## Troubleshooting
+
+### Compiler diagnostics are unavailable
+
+The extension bundles the Zenith language server and the `@zenithbuild/compiler`
+package metadata used to resolve compiler-backed diagnostics. Some editor
+runtimes may not have a matching native compiler package available. In that
+case, the server reports one controlled warning with code
+`ZENITH-COMPILER-UNAVAILABLE`; completion and hover remain available.
 
 ### Cursor / VS Code shows plain or HTML highlighting on `.zen` files
 
